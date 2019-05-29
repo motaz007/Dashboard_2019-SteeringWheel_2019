@@ -2,6 +2,6 @@
 
 Code for 2019 dashboard and steeringwheel
 
-Dashboard 2019: Draft fro code, not finnish due to delays and difficulties with lights and screens
+Dashboard 2019: Draft for code, not finnish due to delays and difficulties with lights and screens
 
 Steeringwheel 2019: Not finished, needs more optimizing
