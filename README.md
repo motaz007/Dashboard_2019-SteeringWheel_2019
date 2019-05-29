@@ -8,4 +8,4 @@ Steeringwheel 2019: Not finished, needs more optimizing
 
 Artboard = utkast av design til bakgrunnene til skjermene
 
-Prototyping/feilsøking inneholder litt testkoder vi har smekket sammen og koder til prototyping. Flere filer er kopier som finnes flere steder på githuben (disse ofte med mindre kommentarer), dette fordi det er prototype mappe, men må være der slik man kan laste den en mappe med alle nødvendige filer
+Prototyping/feilsøking inneholder litt testkoder vi har smekket sammen og koder til prototyping. Flere filer er kopier som finnes flere steder på githuben (disse ofte med mindre kommentarer), dette delvis fordi det er prototype mappe og fordi de må være der slik man kan laste den en mappe med alle nødvendige filer
