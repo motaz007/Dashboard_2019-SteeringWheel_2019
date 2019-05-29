@@ -2,6 +2,8 @@
  * by Ludvik Rønning & Jørgen Wisløff
  * Uses FexCAN library to enable dashboard teensy to send and recieve CAN.
  * CAN at 500k
+ 
+ *early version, lack comments (improved in the actual files)
  */
 
 /*----------CAN-cable-----------------*/
