@@ -48,7 +48,7 @@ void initPins() {
     // Dashboard buttons
     pinMode(PIN_BRAKE_ENABLED, INPUT_PULLUP);  // push button (at pedal)
     attachInterrupt(digitalPinToInterrupt(PIN_BRAKE_ENABLED), brakeButtonChanged_ISR, CHANGE); //ISR for brake
-
+    //add other buttons
 }
 
 /*------------------------- SETUP -------------------------*/
@@ -87,7 +87,7 @@ void loop() {
 
 /*----------------------- ISR FUCTIONS -----------------------*/
 
-void brakeButtonChanged_ISR() {
+void brakeButtonChanged_ISR() { //interrupt function for brake light
     // this button is reversed
     int state = digitalRead(PIN_BRAKE_ENABLED);
 
@@ -101,4 +101,4 @@ void brakeButtonChanged_ISR() {
         Serial.println("  BRAKING  ");
         txMsg.buf[0] = 0x00;
     }
-}
+} //add isr for other buttons
