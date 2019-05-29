@@ -8,4 +8,4 @@ Steeringwheel 2019: Not finished, needs more optimizing
 
 Artboard = utkast av design til bakgrunnene til skjermene
 
-test_canbus kan ikke vurderes siden svært lite er skrevet av oss
+test_can_bus og sharpmemtestredigert kan ikke vurderes siden svært lite er skrevet av oss (canTestFull kan vurderes)
