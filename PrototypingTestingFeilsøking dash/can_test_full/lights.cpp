@@ -1,6 +1,6 @@
 /* SEM 2019
  * by Ludvik Rønning & Jørgen Wisløff
- * 
+ * early version of lights file, lacking comments (see therefore the main steering wheel code
  */
 
 #include "lights.h"
