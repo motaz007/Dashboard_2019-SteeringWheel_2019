@@ -7,3 +7,5 @@ Dashboard 2019: Draft for code, not finnish due to delays and difficulties with 
 Steeringwheel 2019: Not finished, needs more optimizing
 
 Artboard = utkast av design til bakgrunnene til skjermene
+
+test_canbus kan ikke vurderes siden svært lite er skrevet av oss
