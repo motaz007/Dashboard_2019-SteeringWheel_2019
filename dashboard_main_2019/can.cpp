@@ -57,7 +57,7 @@ void readCan(CAN_message_t& msg)
 
 void printCanToSerial(const CAN_message_t& msg)
 {
-    Serial.print(" "); //write message to serial on form: "id:length:buf[1]..."
+    Serial.print(" "); //write message to serial on form: "id:length:data buf[1]: buf[2]..."
     Serial.print(msg.id, HEX);
     Serial.print(": ");
     Serial.print(msg.len);
