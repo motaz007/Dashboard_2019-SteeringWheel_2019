@@ -24,13 +24,14 @@ void turnOffStrip(Adafruit_NeoPixel& strip, const uint16_t& start, uint16_t end)
 
 /*-------------------------- SWHEEL FUNCTIONS -------------------------*/
 void startUpSwheelLight(Adafruit_NeoPixel& shweelLights){
-    shweelLights.setBrightness(40);
+    shweelLights.setBrightness(100);
     shweelLights.begin();
     for (int i = shweelLights.numPixels(); i >= 0; --i) {
-      shweelLights.setPixelColor(i, COLOR_ERROR);
-      shweelLights.show();
-      delay(100);
+      shweelLights.setPixelColor(i, shweelLights.Color(255, 255, 255, 255));
+     shweelLights.show();
+
     }
+     
      delay(1000);
      swheelLedOn = true;
 }
@@ -64,10 +65,16 @@ void drivingLightsFront(Adafruit_NeoPixel& frontLights) {
     frontLights.show();
 }
 
-void drivingLightsBack(Adafruit_NeoPixel& backLights) {
+void drivingLightsBack(Adafruit_NeoPixel& backLights, int ledBrightness) {
+    //backLights.setBrightness(ledBrihtness);
     for (uint16_t i = 0; i < backLights.numPixels(); ++i) {
         backLights.setPixelColor(i, COLOR_BACKLIGHTS);
     }
 
     backLights.show();
+}
+
+void setStripBrightness(Adafruit_NeoPixel& strip, int ledBrightness) {
+    //strip.setBrightness(ledBrihtness);
+//    backLights.show();
 }

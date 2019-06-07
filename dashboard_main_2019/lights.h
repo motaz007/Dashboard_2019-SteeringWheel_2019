@@ -55,7 +55,8 @@ void swheelOK(Adafruit_NeoPixel& sWheelLights);
 //DASH
 void blinkLights(Adafruit_NeoPixel& strip, const uint16_t& start=0, uint16_t end=0); // Enable blinkers in the back. Should blink once per function call. 
 void drivingLightsFront(Adafruit_NeoPixel& frontLights);  // Enable constant driving lights in the front
-void drivingLightsBack(Adafruit_NeoPixel& backLights); // Enable constant driving lights in the back
+void drivingLightsBack(Adafruit_NeoPixel& backLights, int ledBrightness); // Enable constant driving lights in the back
+void setStripBrightness(Adafruit_NeoPixel& strip, int ledBrightness);
 void hazzardLights(Adafruit_NeoPixel& lights);
 void lightShow(Adafruit_NeoPixel& lights);
 void initDashLights();

@@ -7,6 +7,8 @@
 #include "can.h"
 #include "graphics.h"
 #include "helpers.h"
+#include "lights.h"
+//test
 
 /*-------------------------- PINS -------------------------*/
 
@@ -47,9 +49,11 @@ bool debug = false;
 void initPins() {
     // Dashboard buttons
     pinMode(PIN_BRAKE_ENABLED, INPUT_PULLUP);  // push button (at pedal)
-    attachInterrupt(digitalPinToInterrupt(PIN_BRAKE_ENABLED), brakeButtonChanged_ISR, CHANGE); //ISR for brake
-    //add other buttons
+    attachInterrupt(digitalPinToInterrupt(PIN_BRAKE_ENABLED), brakeButtonChanged_ISR, CHANGE); 
+    
 }
+
+Adafruit_NeoPixel light(13, 36, NEO_GRBW + NEO_KHZ800);
 
 /*------------------------- SETUP -------------------------*/
 void setup() {
@@ -70,7 +74,7 @@ void setup() {
   txMsg.buf[5] = 0x3A;
   txMsg.buf[6] = 0x10;
   txMsg.buf[7] = 0x10;
-  
+  startUpSwheelLight(light);
 }
 
 
@@ -80,25 +84,36 @@ void setup() {
 void loop() {
   writeCan(txMsg);
   readCan(rxMsg);
-  printCanToSerial(rxMsg);
-  delay(2000); //needs delay because CANbus crash if everybody sends stuff all the time. Long codes that takes time runnin don't need this 
+
+  if(rxMsg.id == 0x230) {
+    brakeButtonChanged_ISR();
+  }
+  Serial.println("loop");
+ // printCanToSerial(rxMsg);
+  delay(2000); 
   
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/
 
-void brakeButtonChanged_ISR() { //interrupt function for brake light
+void brakeButtonChanged_ISR() { 
     // this button is reversed
     int state = digitalRead(PIN_BRAKE_ENABLED);
-
-    if (state == HIGH) {  // RISING -- is unpressed
+    Serial.println("isr");
+    if (state == HIGH || rxMsg.buf[3]>0) {  // RISING -- is unpressed
         // brake lights on
+
+        //setStripBrightness(backLights, 100);
+      
         Serial.print("  NOT BRAKING  ");
-        txMsg.buf[0] = 0x01;
+        //txMsg.buf[0] = 0x01;
+        
     }
     else {
         // brake lights off
+
+        //setStripBrightness(backLights, 40);
         Serial.println("  BRAKING  ");
-        txMsg.buf[0] = 0x00;
+        //txMsg.buf[0] = 0x00;
     }
-} //add isr for other buttons
+} 
