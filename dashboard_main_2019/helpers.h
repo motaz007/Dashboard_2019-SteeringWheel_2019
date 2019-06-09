@@ -8,6 +8,10 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
+#define SERIAL_BAUDRATE 9600
+
 void initSerial();
+void clockSpeedLow(bool debug);
+void clockSpeedHigh(bool debug);
 
 #endif

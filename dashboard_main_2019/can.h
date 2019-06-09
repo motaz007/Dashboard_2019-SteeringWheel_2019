@@ -14,11 +14,14 @@
 #define swheelID 0x230
 #define someOtherID 0x230
 
+
+#define CAN_BAUDRATE 500000
+
 /*-------------------- Functions for CANbus --------------------*/
 void canFilter();
 void initCAN();
 int writeCan(const CAN_message_t& msg);
 void readCan(CAN_message_t& msg);
-void printCanToSerial(const CAN_message_t& msg);
+void printCanToSerial(const CAN_message_t& msg, bool debug);
 
 #endif

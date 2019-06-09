@@ -37,8 +37,9 @@ void canFilter() {
 
 void initCAN()
 {
-  Serial.println("Initializeing CANbus at 500k.");
-  Can0.begin(500000);  
+  
+  Serial.println("Initializing CANbus at 500k.");
+  Can0.begin(CAN_BAUDRATE);  
   canFilter(); //set up filters
 }
 
@@ -55,8 +56,9 @@ void readCan(CAN_message_t& msg)
   }
 }
 
-void printCanToSerial(const CAN_message_t& msg)
+void printCanToSerial(const CAN_message_t& msg, bool debug)
 {
+  if(debug){
     Serial.print(" "); //write message to serial on form: "id:length:data buf[1]: buf[2]..."
     Serial.print(msg.id, HEX);
     Serial.print(": ");
@@ -69,4 +71,5 @@ void printCanToSerial(const CAN_message_t& msg)
       } 
     }
     Serial.print("  \n");
+  }
 }
