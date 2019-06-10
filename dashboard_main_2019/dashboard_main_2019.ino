@@ -58,9 +58,9 @@ static CAN_message_t txMsg, rxMsg;
 Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KHZ800);
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
-//Adafruit_SharpMem screen1(S1_SCK, S1_MOSI, S1_CS, WIDTH, HEIGHT);
-//Adafruit_SharpMem screen2(S2_SCK, S2_MOSI, S2_CS, WIDTH, HEIGHT);
-//enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
+Adafruit_SharpMem screen1(S1_SCK, S1_MOSI, S1_CS, WIDTH, HEIGHT);
+Adafruit_SharpMem screen2(S2_SCK, S2_MOSI, S2_CS, WIDTH, HEIGHT);
+enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 /*------------------------- FUCTIONS -------------------------*/
 
@@ -75,6 +75,36 @@ void initPins() {
     pinMode(PIN_LIGHT_ENABLE, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_ENABLE), raceShowMode_ISR, FALLING);
     //add other buttons
+}
+
+void initScreen1() {
+    screen1.begin();
+    screen1.clearDisplay();
+    screen1.refresh();
+}
+
+void initScreen2() {
+    screen2.begin();
+    screen2.clearDisplay();
+
+    screen2.refresh();
+}
+
+void testdrawchar(void) {
+  
+  screen1.setTextSize(6);
+  screen1.setTextColor(WHITE);
+  screen1.setCursor(130,80);
+  screen1.cp437(true);
+
+  
+    screen1.write('1');
+    screen1.write('0');
+    screen1.write('/');
+    screen1.write('1');
+    screen1.write('0');
+
+  screen1.refresh();
 }
 
 /*------------------------- SETUP -------------------------*/
@@ -96,72 +126,45 @@ void setup() {
   txMsg.buf[6] = 0x00;
   txMsg.buf[7] = 0x00;
 
-  frontlights.begin();
+  /*frontlights.begin();
   backlights.begin();
-  startUpLights(frontlights, backlights);
+  startUpLights(frontlights, backlights);*/
 
-  //initScreen1();
-  //drawBackground(screen1, true);
-
-  //initScreen2();
-  //drawBackground(screen2, false);
-
+  initScreen1();
+  //drawString(screen1, "screen1", 100, 100, 10);
+  drawBackground(screen1, true);
+  screen1.refresh();
+  delay(1000);
+  initScreen2();
+  //drawString(screen2, "screen2", 20, 20, 10);
+  drawBackground(screen2, false);
+  screen2.refresh();
+  screen2.endWrite();
+  delay(1000);
+  char str[] = "hei";
+  drawString(screen1, str, 150, 10, 4);
+  screen1.refresh();
+  //testdrawchar();
 }
 
-/*void initScreen1() {
-    screen1.begin();
-    screen1.setRotation(ORIENTATION::DOWN);
-    screen1.setFont(&FreeMono9pt7b);
-    screen1.setTextColor(BLACK, WHITE);
-    screen1.clearDisplay();
 
-    screen1.refresh();
-}
-
-void initScreen2() {
-    screen2.begin();
-    screen2.setRotation(ORIENTATION::DOWN);
-    screen2.setFont(&FreeMono9pt7b);
-    screen2.setTextColor(BLACK, WHITE);
-    screen2.clearDisplay();
-
-    screen2.refresh();
-}
-*/
 /*----------------------- MAIN LOOP -----------------------*/
 
-void loop() {
-  
-  if(Serial.available() > 0 )  {  // MARKUS TEST 2. GEAR
-    int incomingData= Serial.read(); 
-    switch(incomingData) { 
-        case 48:
-           txMsg.buf[7] = 0;
-           break;
-      
-        case 49:
-           txMsg.buf[7] = 1;
-           break;
-
-        case 50:
-           txMsg.buf[7] = 2;
-           break;
-           
-        default:
-           
-           break;
-   }
-  }
-
-  //Serial.println(raceModeON);
-  writeCan(txMsg);
-  readCan(rxMsg);
-  //printCanToSerial(rxMsg, debug);  
-  hazardLightRunning = hazardLights(frontlights, backlights, hazardLightON, raceModeON);
-  sWheelCan();
-  delay(50); //needs delay because CANbus crash if everybody sends stuff all the time. Long codes that takes time runnin don't need this 
-  //Serial.println(brakeVal);
-
+void loop() {/*
+  //screen1.refresh();
+  delay(4000);
+  //screen2.refresh();
+  /*delay(500);
+  testdrawrect(screen1);
+  Serial.print("done 1");
+  screen1.clearDisplay();
+  testfillrect(screen2);
+  Serial.print("done 2\n");
+  delay(500);
+  //screen1.clearDisplay();/*
+//  screen2.clearDisplay();
+  //delay(500);
+  //drawString(screen1, "screen1", 100, 100, 10);*/
   
 }
 

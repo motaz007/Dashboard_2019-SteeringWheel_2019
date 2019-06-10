@@ -45,9 +45,12 @@ void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int s
 
 //INIT FUNCTIONS
 
+//Test Functions//
+void testfillrect(Adafruit_SharpMem disp);
+void testdrawrect(Adafruit_SharpMem disp);
 
 
-
+/*
 void initScreen1(); //ta inn screen
 void initScreen2(); //---||---
 void initScreensContent(); //---||---
@@ -70,6 +73,6 @@ void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& count, cons
 void drawBestAndAvgLapTime(Adafruit_SharpMem& screen, volatile const int* lapTimes, const uint8_t& size);
 void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal);
 void drawTemperature(Adafruit_SharpMem& screen, const int& motor1temp, const int& motor2temp);
-void drawTotalEnegry(Adafruit_SharpMem& screen, const float& motor1totalEnergy, const float& motor2totalEnergy);
+void drawTotalEnegry(Adafruit_SharpMem& screen, const float& motor1totalEnergy, const float& motor2totalEnergy);*/
 
 #endif
