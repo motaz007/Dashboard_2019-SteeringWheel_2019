@@ -83,6 +83,7 @@ void initPins() {
 void initScreen1() {
     screen1.begin();
     screen1.clearDisplay();
+    //screen1.setRotation(ORIENTATION::LEFT);
      drawBackground(screen1, true);
      
     screen1.refresh();
