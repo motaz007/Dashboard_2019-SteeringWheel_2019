@@ -42,6 +42,7 @@ bool debug = true;
 #define PIN_CAN_RX_LED 23
 #define PIN_CAN_TX_LED 22
 
+
 bool brakeON = false;
 bool regenBrakeON = false;
 bool hazardLightON = false;
@@ -59,7 +60,9 @@ Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KH
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
 Adafruit_SharpMem screen1(S1_SCK, S1_MOSI, S1_CS, WIDTH, HEIGHT);
+
 Adafruit_SharpMem screen2(S2_SCK, S2_MOSI, S2_CS, WIDTH, HEIGHT);
+
 enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 /*------------------------- FUCTIONS -------------------------*/
@@ -80,12 +83,15 @@ void initPins() {
 void initScreen1() {
     screen1.begin();
     screen1.clearDisplay();
+     drawBackground(screen1, true);
+     
     screen1.refresh();
 }
 
 void initScreen2() {
     screen2.begin();
     screen2.clearDisplay();
+    drawBackground(screen2, false);
 
     screen2.refresh();
 }
@@ -131,18 +137,14 @@ void setup() {
   startUpLights(frontlights, backlights);*/
 
   initScreen1();
-  //drawString(screen1, "screen1", 100, 100, 10);
-  drawBackground(screen1, true);
-  screen1.refresh();
-  delay(1000);
+
+  delay(100);
   initScreen2();
-  //drawString(screen2, "screen2", 20, 20, 10);
-  drawBackground(screen2, false);
-  screen2.refresh();
-  screen2.endWrite();
-  delay(1000);
+
+
+  delay(100);
   char str[] = "hei";
-  drawString(screen1, str, 150, 10, 4);
+  drawString(screen1, str, 50, 10, 4);
   screen1.refresh();
   //testdrawchar();
 }
@@ -150,9 +152,9 @@ void setup() {
 
 /*----------------------- MAIN LOOP -----------------------*/
 
-void loop() {/*
+void loop() {
   //screen1.refresh();
-  delay(4000);
+  delay(400);
   //screen2.refresh();
   /*delay(500);
   testdrawrect(screen1);
