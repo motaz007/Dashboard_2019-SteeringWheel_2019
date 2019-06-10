@@ -50,6 +50,7 @@ bool lightON = true;
 bool raceModeON = false;
 bool windowWiperON = false;
 int brakeVal = 0;
+int optimalCounter;
 
 
 static CAN_message_t txMsg, rxMsg;
@@ -57,6 +58,9 @@ static CAN_message_t txMsg, rxMsg;
 Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KHZ800);
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
+//Adafruit_SharpMem screen1(S1_SCK, S1_MOSI, S1_CS, WIDTH, HEIGHT);
+//Adafruit_SharpMem screen2(S2_SCK, S2_MOSI, S2_CS, WIDTH, HEIGHT);
+//enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 /*------------------------- FUCTIONS -------------------------*/
 
@@ -96,11 +100,34 @@ void setup() {
   backlights.begin();
   startUpLights(frontlights, backlights);
 
+  //initScreen1();
+  //drawBackground(screen1, true);
+
+  //initScreen2();
+  //drawBackground(screen2, false);
+
 }
 
+/*void initScreen1() {
+    screen1.begin();
+    screen1.setRotation(ORIENTATION::DOWN);
+    screen1.setFont(&FreeMono9pt7b);
+    screen1.setTextColor(BLACK, WHITE);
+    screen1.clearDisplay();
 
+    screen1.refresh();
+}
 
+void initScreen2() {
+    screen2.begin();
+    screen2.setRotation(ORIENTATION::DOWN);
+    screen2.setFont(&FreeMono9pt7b);
+    screen2.setTextColor(BLACK, WHITE);
+    screen2.clearDisplay();
 
+    screen2.refresh();
+}
+*/
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
@@ -191,14 +218,18 @@ void blankButton_ISR(){
 }
 
 void lightOnOff_ISR(){
-  unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   
   if (interrupt_time - last_interrupt_time > 100){
     int state = digitalRead(PIN_HAZARD_LIGHT);
     if(state == LOW && lightON == false){
       lightON = true;
-      startUpLights(frontlights, backlights);
+      if(raceModeON){
+        raceMode(frontlights, backlights);
+      }else{
+        startUpLights(frontlights, backlights);
+      }
     }else{
       turnOffStrip(frontlights, 0, NUM_FRONTLIGHTS);
       turnOffStrip(backlights, 0, NUM_BACKLIGHTS);
@@ -209,7 +240,7 @@ void lightOnOff_ISR(){
 }
 
 void windowWiper_ISR(){
-  unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
   
   if (interrupt_time - last_interrupt_time > 100){
@@ -243,24 +274,51 @@ void raceShowMode_ISR(){
   }
 }
 
+void reset_ISR(){
+  
+}
+
 
 /*---------------- OTHER FUNCTIONS ---------------------*/
 
 void sWheelCan(){
   if (rxMsg.id == 0x230){ 
     brakeVal = rxMsg.buf[2];
-    if(brakeVal > 0 && regenBrakeON == false){  // BLINKLIGHTS
+    if(brakeVal > 0 && regenBrakeON == false){  // BRAKELIGHTS
       brakeLights(backlights, BRIGHTNESS_BACK_BRAKE);
       regenBrakeON = true;
     }else if(brakeVal == 0 && regenBrakeON == true){
       brakeLights(backlights, BRIGHTNESS_BACK);
       regenBrakeON = false;
     }
-    if(bitRead(rxMsg.buf[1],1)){ // LEFT //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
+    if(bitRead(rxMsg.buf[1],1)){ // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
       blinkLights(frontlights, backlights, true, raceModeON);
     }
-    if(bitRead(rxMsg.buf[1],2)){ // RIGHT  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
+    if(bitRead(rxMsg.buf[1],2)){ // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
       blinkLights(frontlights, backlights, false, raceModeON);
+    }
+    if(bitRead(rxMsg.buf[1],3)){ //CC-button, counter for optimal acceleration
+      static unsigned long last_interrupt_time = 0;
+      unsigned long interrupt_time = millis();
+      if (interrupt_time - last_interrupt_time > 200){
+        optimalCounter++;
+        if(optimalCounter > OPTIMALCOUNTER_MAX){
+          optimalCounter = 0;
+        }
+        last_interrupt_time = interrupt_time;
+      }
+    }
+    if(bitRead(rxMsg.buf[1],4)){ //OptimalCurrent
+      
+    }
+    if(bitRead(rxMsg.buf[1],5)){ //Lap
+      
+    }
+    if(bitRead(rxMsg.buf[1],6)){ // Horn
+      // HORN ON
+    }
+    if(bitRead(rxMsg.buf[1],7)){ //OptimalBrake
+      
     }
   }
 }

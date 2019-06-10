@@ -12,8 +12,8 @@
 
 /* SCREEN INCLUDES */
 //Bitmaps for backgrounds:
-#include "old_bitmap_left.h"
-#include "old_bitmap_right.h"
+#include "left.h"
+#include "right.h"
 
 //Fonts:
 #include "fonts/FreeMono9pt7b.h"
