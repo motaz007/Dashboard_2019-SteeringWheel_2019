@@ -16,15 +16,15 @@ bool debug = true;
 /*-------------------------- PINS -------------------------*/
 
 /* COMM PARAMETERS */
-// SCREEN 1 //endre til left eller right
-#define S1_SCK  13
-#define S1_MOSI 11
-#define S1_CS   10
+// LEFT SCREEN
+#define SL_SCK  13
+#define SL_MOSI 11
+#define SL_CS   10
 
-// SCREEN 2
-#define S2_SCK  32
-#define S2_MOSI 21
-#define S2_CS   31
+// RIGHT SVREEN
+#define SR_SCK  32
+#define SR_MOSI 21
+#define SR_CS   31
 
 // LIGHTS
 #define PIN_BACKLIGHT   35
@@ -59,9 +59,9 @@ static CAN_message_t txMsg, rxMsg;
 Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KHZ800);
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
-Adafruit_SharpMem screen1(S1_SCK, S1_MOSI, S1_CS, WIDTH, HEIGHT);
+Adafruit_SharpMem leftScreen(SL_SCK, SL_MOSI, SL_CS, WIDTH, HEIGHT); //leftScreen stygt?
 
-Adafruit_SharpMem screen2(S2_SCK, S2_MOSI, S2_CS, WIDTH, HEIGHT);
+Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 
 enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
@@ -80,38 +80,38 @@ void initPins() {
     //add other buttons
 }
 
-void initScreen1() {
-    screen1.begin();
-    screen1.clearDisplay();
-    //screen1.setRotation(ORIENTATION::LEFT);
-     drawBackground(screen1, true);
+void initleftScreen() {
+    leftScreen.begin();
+    leftScreen.clearDisplay();
+    //leftScreen.setRotation(ORIENTATION::LEFT);
+     drawBackground(leftScreen, true);
      
-    screen1.refresh();
+    leftScreen.refresh();
 }
 
-void initScreen2() {
-    screen2.begin();
-    screen2.clearDisplay();
-    drawBackground(screen2, false);
+void initrightScreen() {
+    rightScreen.begin();
+    rightScreen.clearDisplay();
+    drawBackground(rightScreen, false);
 
-    screen2.refresh();
+    rightScreen.refresh();
 }
 
 void testdrawchar(void) {
   
-  screen1.setTextSize(6);
-  screen1.setTextColor(WHITE);
-  screen1.setCursor(130,80);
-  screen1.cp437(true);
+  leftScreen.setTextSize(6);
+  leftScreen.setTextColor(WHITE);
+  leftScreen.setCursor(130,80);
+  leftScreen.cp437(true);
 
   
-    screen1.write('1');
-    screen1.write('0');
-    screen1.write('/');
-    screen1.write('1');
-    screen1.write('0');
+    leftScreen.write('1');
+    leftScreen.write('0');
+    leftScreen.write('/');
+    leftScreen.write('1');
+    leftScreen.write('0');
 
-  screen1.refresh();
+  leftScreen.refresh();
 }
 
 /*------------------------- SETUP -------------------------*/
@@ -137,16 +137,16 @@ void setup() {
   backlights.begin();
   startUpLights(frontlights, backlights);*/
 
-  initScreen1();
+  initleftScreen();
 
   delay(100);
-  initScreen2();
+  initrightScreen();
 
 
   delay(100);
   char str[] = "hei";
-  drawString(screen1, str, 50, 10, 4);
-  screen1.refresh();
+  drawString(leftScreen, str, 50, 10, 4);
+  leftScreen.refresh();
   //testdrawchar();
 }
 
@@ -154,20 +154,20 @@ void setup() {
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-  //screen1.refresh();
+  //leftScreen.refresh();
   delay(400);
-  //screen2.refresh();
+  //rightScreen.refresh();
   /*delay(500);
-  testdrawrect(screen1);
+  testdrawrect(leftScreen);
   Serial.print("done 1");
-  screen1.clearDisplay();
-  testfillrect(screen2);
+  leftScreen.clearDisplay();
+  testfillrect(rightScreen);
   Serial.print("done 2\n");
   delay(500);
-  //screen1.clearDisplay();/*
-//  screen2.clearDisplay();
+  //leftScreen.clearDisplay();/*
+//  rightScreen.clearDisplay();
   //delay(500);
-  //drawString(screen1, "screen1", 100, 100, 10);*/
+  //drawString(leftScreen, "leftScreen", 100, 100, 10);*/
   
 }
 
