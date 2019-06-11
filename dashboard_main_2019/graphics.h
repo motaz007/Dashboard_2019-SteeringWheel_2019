@@ -6,8 +6,7 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-//#include ".\\lib/Adafruit_SharpMem_edited/Adafruit_SharpMem_edited.h"
-#include <Adafruit_SharpMem_edited_test>
+#include <Adafruit_SharpMem.h>
 #include <Adafruit_GFX.h>
 #include <gfxfont.h>
 
