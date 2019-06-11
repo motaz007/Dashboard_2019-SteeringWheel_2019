@@ -6,7 +6,8 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-#include ".\\lib/Adafruit_SharpMem_edited/Adafruit_SharpMem_edited.h"
+//#include ".\\lib/Adafruit_SharpMem_edited/Adafruit_SharpMem_edited.h"
+#include <Adafruit_SharpMem_edited_test>
 #include <Adafruit_GFX.h>
 #include <gfxfont.h>
 
@@ -38,6 +39,11 @@
 #define WHITE 1
 
 /*-------------------------- FUNCTIONS --------------------------*/
+
+/*class screens : public Adafruit_sharpMem {
+  
+}*/
+
 
 void clearScreen(Adafruit_SharpMem& screen); 
 void drawBackground(Adafruit_SharpMem& screen, bool right=true); // Draws the background bitmap defined in a .h file.
