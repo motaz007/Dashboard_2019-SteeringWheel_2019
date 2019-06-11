@@ -21,7 +21,7 @@ bool debug = true;
 #define SL_MOSI 11
 #define SL_CS   10
 
-// RIGHT SVREEN
+// RIGHT SCREEN
 #define SR_SCK  32
 #define SR_MOSI 21
 #define SR_CS   31
@@ -63,7 +63,7 @@ Adafruit_SharpMem leftScreen(SL_SCK, SL_MOSI, SL_CS, WIDTH, HEIGHT); //leftScree
 
 Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 
-enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
+//enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 /*------------------------- FUCTIONS -------------------------*/
 
@@ -80,39 +80,7 @@ void initPins() {
     //add other buttons
 }
 
-void initleftScreen() {
-    leftScreen.begin();
-    leftScreen.clearDisplay();
-    //leftScreen.setRotation(ORIENTATION::LEFT);
-     drawBackground(leftScreen, true);
-     
-    leftScreen.refresh();
-}
 
-void initrightScreen() {
-    rightScreen.begin();
-    rightScreen.clearDisplay();
-    drawBackground(rightScreen, false);
-
-    rightScreen.refresh();
-}
-
-void testdrawchar(void) {
-  
-  leftScreen.setTextSize(6);
-  leftScreen.setTextColor(WHITE);
-  leftScreen.setCursor(130,80);
-  leftScreen.cp437(true);
-
-  
-    leftScreen.write('1');
-    leftScreen.write('0');
-    leftScreen.write('/');
-    leftScreen.write('1');
-    leftScreen.write('0');
-
-  leftScreen.refresh();
-}
 
 /*------------------------- SETUP -------------------------*/
 void setup() {
@@ -136,18 +104,13 @@ void setup() {
   /*frontlights.begin();
   backlights.begin();
   startUpLights(frontlights, backlights);*/
+  char str[] = "Helloorld!";
 
-  initleftScreen();
-
-  delay(100);
-  initrightScreen();
-
-
-  delay(100);
-  char str[] = "hei";
-  drawString(leftScreen, str, 50, 10, 4);
+  initScreen(leftScreen, false);
+  delay(500);
+  initScreen(rightScreen, true);
+  drawString(leftScreen, str, 10, 40, 2);
   leftScreen.refresh();
-  //testdrawchar();
 }
 
 

@@ -1,5 +1,13 @@
 #include "graphics.h"
 
+void initScreen(Adafruit_SharpMem& screen, bool right) {
+    screen.begin();
+    screen.clearDisplay();
+    drawBackground(screen, right);
+    screen.setRotation(ORIENTATION::LEFT);
+    screen.refresh();
+}
+
 void drawBackground(Adafruit_SharpMem& screen, bool right) {
     int X = 0,
         Y = 0;
@@ -19,27 +27,4 @@ void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int s
     for (unsigned int i = 0; i < sizeof(str)/sizeof(str[0]) + 1; ++i) {
         screen.write(str[i]);  // `.write` moves cursor for every character
     }
-}
-
-
-
-
-//TEST FUNCTIONS
-
-void testfillrect(Adafruit_SharpMem disp) {
-  uint8_t color = 1;
-  for (uint8_t i=0; i<disp.height()/2; i+=3) {
-    // alternate colors
-    disp.fillRect(i, i, disp.width()-i*2, disp.height()-i*2, color%2);
-    disp.refresh();
-    color++;
-  }
-}
-
-   
-void testdrawrect(Adafruit_SharpMem disp) {
-  for (uint8_t i=0; i<disp.height()/2; i+=2) {
-    disp.drawRect(i, i, disp.width()-2*i, disp.height()-2*i, BLACK);
-    disp.refresh();
-  }
 }

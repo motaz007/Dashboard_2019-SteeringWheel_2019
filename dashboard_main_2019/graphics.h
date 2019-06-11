@@ -6,7 +6,7 @@
 #ifndef GRAPHICS_H_
 #define GRAPHICS_H_
 
-#include <Adafruit_SharpMem.h>
+#include <Adafruit_SharpMem_edited.h>
 #include <Adafruit_GFX.h>
 #include <gfxfont.h>
 
@@ -21,15 +21,9 @@
 #include "fonts/FreeMono18pt7b.h"
 #include "fonts/FreeMono24pt7b.h"
 
-// RIGHT SCREEN PINS
-#define SR_SCK  13
-#define SR_MOSI 11
-#define SR_CS   10
+enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
-// LEFT SCREEN PINS
-#define SL_SCK  32
-#define SL_MOSI 21
-#define SL_CS   31
+
 
 /* SCREEN PARAMETERS */
 #define WIDTH  320
@@ -43,16 +37,14 @@
   
 }*/
 
-
+void initScreen(Adafruit_SharpMem& screen, bool right);
 void clearScreen(Adafruit_SharpMem& screen); 
 void drawBackground(Adafruit_SharpMem& screen, bool right=true); // Draws the background bitmap defined in a .h file.
 void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);
 
 //INIT FUNCTIONS
 
-//Test Functions//
-void testfillrect(Adafruit_SharpMem disp);
-void testdrawrect(Adafruit_SharpMem disp);
+
 
 
 /*

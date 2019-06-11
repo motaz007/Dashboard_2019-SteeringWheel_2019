@@ -4,7 +4,7 @@
  * CAN at 500k
  */
 
-#include "lib\FlexCAN_Library-FF\FlexCAN.h>
+#include <FlexCAN.h>
 #include "graphics.h"
 
 #ifndef CAN_H_
