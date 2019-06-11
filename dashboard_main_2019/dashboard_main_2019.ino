@@ -68,6 +68,7 @@ Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 
 uint8_t lap = 0;
 uint8_t maxLap = 10;
+uint8_t lapTime = 0;
 
 /*------------------------- FUCTIONS -------------------------*/
 
@@ -118,6 +119,7 @@ void setup() {
   
   
   drawLapCount(leftScreen, lap, maxLap);
+  drawLapTime(leftScreen, lapTime);
   leftScreen.refresh();
 }
 
@@ -125,15 +127,19 @@ void setup() {
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-
+  lapTime++;
   lap++;
   if (lap >10) {
     lap=1;
   }
   drawLapCount(leftScreen, lap, maxLap);
-  //delay(1000);
+  Serial.println("what?");
+  drawLapTime(leftScreen, lapTime);
   leftScreen.refresh();
-  delay(300);
+  delay(1000);
+  drawRectangle(leftScreen);
+  drawCirkle(leftScreen);
+
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/

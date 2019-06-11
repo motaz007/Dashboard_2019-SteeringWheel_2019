@@ -41,13 +41,22 @@ enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 /*----------- SCREEN VARIABLES ----------- */
 
+//FONT HEIGHTS
+const uint8_t M24 = 40;
+const uint8_t M18 = 18;
+const uint8_t M9 = 9;
 
-
-const uint8_t lapCountVerticalMargin = 65;
+//Lap Count
+const uint8_t lapCountVerticalMargin = 65; //to bottom left?
 const uint8_t lapCountHorizontalMargin = 30;
 const uint8_t lapCountVertical = 60;
 const uint8_t lapCountHorizontal = 140;
 
+//Lap Time
+const uint8_t lapTimeVerticalMargin = 170; //to bottom left?
+const uint8_t lapTimeHorizontalMargin = 90;
+const uint8_t lapTimeVertical = 200;
+const uint8_t lapTimeHorizontal = 140;
 
 /*-------------------------- FUNCTIONS --------------------------*/
 
@@ -66,7 +75,13 @@ void initText(Adafruit_SharpMem& screen, bool right);
 
 //DRAW FUNCTIONS FOR LEFT SCREEN
 void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, const uint8_t& maxLaps);
+void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds);
+void drawRectangle(Adafruit_SharpMem& screen);
 
+
+//DRAW FUNCTIONS FOR RIGHT SCREEN
+
+void drawCirkle(Adafruit_SharpMem& screen);
 
 
 #endif
