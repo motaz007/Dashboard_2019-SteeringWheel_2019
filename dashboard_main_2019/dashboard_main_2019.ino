@@ -16,15 +16,15 @@ bool debug = true;
 /*-------------------------- PINS -------------------------*/
 
 /* COMM PARAMETERS */
-// LEFT SCREEN
-#define SL_SCK  13
-#define SL_MOSI 11
-#define SL_CS   10
+// RIGHTSCREEN
+#define SR_SCK  13
+#define SR_MOSI 11
+#define SR_CS   10
 
-// RIGHT SCREEN
-#define SR_SCK  32
-#define SR_MOSI 21
-#define SR_CS   31
+// LEFT SCREEN
+#define SL_SCK  32
+#define SL_MOSI 21
+#define SL_CS   31
 
 // LIGHTS
 #define PIN_BACKLIGHT   35
@@ -65,6 +65,10 @@ Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 
 //enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
+
+uint8_t lap = 0;
+uint8_t maxLap = 10;
+
 /*------------------------- FUCTIONS -------------------------*/
 
 void initPins() {
@@ -104,12 +108,16 @@ void setup() {
   /*frontlights.begin();
   backlights.begin();
   startUpLights(frontlights, backlights);*/
-  char str[] = "Helloorld!";
+  char str1[] = "Laps";
+  char str2[] = "taken";
 
-  initScreen(leftScreen, false);
+  initScreen(leftScreen, LEFTSCREEN);
+  initText(leftScreen, LEFTSCREEN);
   delay(500);
-  initScreen(rightScreen, true);
-  drawString(leftScreen, str, 10, 40, 2);
+  initScreen(rightScreen, RIGHTSCREEN);
+  
+  
+  drawLapCount(leftScreen, lap, maxLap);
   leftScreen.refresh();
 }
 
@@ -117,21 +125,15 @@ void setup() {
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-  //leftScreen.refresh();
-  delay(400);
-  //rightScreen.refresh();
-  /*delay(500);
-  testdrawrect(leftScreen);
-  Serial.print("done 1");
-  leftScreen.clearDisplay();
-  testfillrect(rightScreen);
-  Serial.print("done 2\n");
-  delay(500);
-  //leftScreen.clearDisplay();/*
-//  rightScreen.clearDisplay();
-  //delay(500);
-  //drawString(leftScreen, "leftScreen", 100, 100, 10);*/
-  
+
+  lap++;
+  if (lap >10) {
+    lap=1;
+  }
+  drawLapCount(leftScreen, lap, maxLap);
+  //delay(1000);
+  leftScreen.refresh();
+  delay(300);
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/
