@@ -26,6 +26,8 @@
 #include "fonts/FreeMono18pt7b.h"
 #include "fonts/FreeMono24pt7b.h"
 #include "DSEG7_7SEGGCHAN_MINI_Regular_16.h"
+#include "Roboto_Mono_Bold_18.h"
+#include "Open_Sans_Bold_18.h"
 
 #include "fonts/FreeMonoBold9pt7b.h"
 #include "fonts/FreeMonoBold12pt7b.h"

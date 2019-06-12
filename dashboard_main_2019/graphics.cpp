@@ -43,30 +43,21 @@ void initScreen(Adafruit_SharpMem& screen, bool right) {
 }
 
 void initText(Adafruit_SharpMem& screen, bool right) {
-    char Laps[] = "Laps";
-    char taken[] = "taken";
-    
-    char Time[] = "Time";
-    char used[] = "used";
-    char thiis[] = "this";
-    char lap[] = "lap ";
+    char Lap[] = "Lap";
 
     char sector[32] = "Sector";
     
   if(!right) {
     screen.setTextColor(BLACK);
-    screen.setFont(&DSEG7_7SEGGCHAN_MINI_Regular_16);
-    drawString(screen, Laps, 60, 90, 1);
+    screen.setFont(&FreeMonoBold9pt7b);
+    drawString(screen, Lap, 130, 90, 1);
 
-    drawString(screen, taken, 110, 90, 1);
     
     screen.setFont(&FreeMono9pt7b);
     screen.setTextColor(WHITE);
-    drawString(screen, "Time", 43, 190, 1);
-    drawString(screen, "used", 93, 190, 1);
+    drawString(screen, "Lap ", 143,190, 1);
     screen.setFont(&FreeMonoBold9pt7b);
-    drawString(screen, "this", 143,190, 1);
-    drawString(screen, "lap ", 193, 190, 1);
+    drawString(screen, "time", 183, 190, 1);
 
     
     screen.setFont(&FreeMono9pt7b);
@@ -74,9 +65,9 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     screen.write('r'); //må fikses så man kan ha lengre strenger
 
 
-    drawString(screen, "Time",  130, 275, 1);
+    drawString(screen, "Time",  125, 275, 1);
     screen.setFont(&FreeMonoBold9pt7b);
-    drawString(screen, "used",  180, 275, 1);
+    drawString(screen, "total",  175, 275, 1);
     
   } else if (right) {
       screen.setFont(&FreeMono9pt7b);
@@ -111,7 +102,7 @@ void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, c
     }
    
     screen.fillRect(lapCountHorizontalMargin, lapCountVerticalMargin-M24/1.2, lapCountHorizontal, M24, WHITE); //fiks variabler. dette er litt for random. sett opp skisse og tegn
-    screen.setFont(&FreeMonoBold24pt7b);
+    screen.setFont(&Roboto_Mono_Bold_18);
     screen.setTextColor(BLACK);
     drawString(screen, str, lapCountHorizontalMargin, lapCountVerticalMargin, 1);
 }
@@ -173,7 +164,7 @@ void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float&
     uint8_t speedThreshold = 10;
     float motorSpeed = 0;
 
-    screen.setFont(&FreeMonoBold24pt7b);
+    screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(BLACK);
     screen.fillRect(40, 45, 115, 40, WHITE);
     if (abs(motor1speed-motor2speed) > speedThreshold) {
