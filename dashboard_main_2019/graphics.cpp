@@ -55,7 +55,7 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     
   if(!right) {
     screen.setTextColor(BLACK);
-    screen.setFont(&FreeMonoBold9pt7b);
+    screen.setFont(&DSEG7_7SEGGCHAN_MINI_Regular_16);
     drawString(screen, Laps, 60, 90, 1);
 
     drawString(screen, taken, 110, 90, 1);
@@ -218,6 +218,16 @@ void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, con
    screen.fillCircle(x, y, r, WHITE);
    screen.fillCircle(x, y, r-2, BLACK);
 }
+
+void drawLightIcon(Adafruit_SharpMem& screen, bool on) {
+    if(on) {
+      screen.drawXBitmap(150, 150, lightIcon_bits, 21, 22, WHITE);
+    } else {
+      screen.fillRect(150, 150, 21, 22, BLACK);
+    }
+    
+}
+    
 
 void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal) {
 

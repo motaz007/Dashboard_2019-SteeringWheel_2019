@@ -17,11 +17,15 @@
 #include "left.h"
 #include "right.h"
 
+/* Bitmap for icons */
+#include "lightIcon.h"
+
 //Fonts:
 #include "fonts/FreeMono9pt7b.h"
 #include "fonts/FreeMono12pt7b.h"
 #include "fonts/FreeMono18pt7b.h"
 #include "fonts/FreeMono24pt7b.h"
+#include "DSEG7_7SEGGCHAN_MINI_Regular_16.h"
 
 #include "fonts/FreeMonoBold9pt7b.h"
 #include "fonts/FreeMonoBold12pt7b.h"
@@ -92,6 +96,7 @@ void drawSector(Adafruit_SharpMem& screen, int sector);
 void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed);
 void drawGear(Adafruit_SharpMem& screen, const char gear);
 void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, const uint8_t r);
+void drawLightIcon(Adafruit_SharpMem& screen, bool on);
 void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal);
 void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current);
 

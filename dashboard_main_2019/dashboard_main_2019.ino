@@ -128,6 +128,9 @@ void setup() {
   drawSpeed(rightScreen, 2, 150);
   drawGear(rightScreen, '2');
 
+  drawLightIcon(rightScreen, true);
+  
+
   rightScreen.refresh();
   leftScreen.refresh();
   
