@@ -43,7 +43,8 @@ enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 //FONT HEIGHTS
 const uint8_t M24 = 40;
-const uint8_t M18 = 18;
+const uint8_t M18 = 28;
+const uint8_t M12 = 12;
 const uint8_t M9 = 9;
 
 //Lap Count
@@ -58,6 +59,11 @@ const uint8_t lapTimeHorizontalMargin = 90;
 const uint8_t lapTimeVertical = 200;
 const uint8_t lapTimeHorizontal = 140;
 
+//Tme 
+const uint8_t timeHorizontalMargin = 125;
+const uint8_t timeVerticalMargin = 250;
+const uint8_t timeHorizontal = 105;
+
 /*-------------------------- FUNCTIONS --------------------------*/
 
 /*class screens : public Adafruit_sharpMem {
@@ -67,6 +73,7 @@ const uint8_t lapTimeHorizontal = 140;
 
 void drawBackground(Adafruit_SharpMem& screen, bool right=true); // Draws the background bitmap defined in a .h file.
 void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);
+void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1); //denne trengs!!
 
 //INIT FUNCTIONS
 
@@ -76,10 +83,14 @@ void initText(Adafruit_SharpMem& screen, bool right);
 //DRAW FUNCTIONS FOR LEFT SCREEN
 void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, const uint8_t& maxLaps);
 void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds);
+void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds);
 void drawRectangle(Adafruit_SharpMem& screen);
+void drawSector(Adafruit_SharpMem& screen, int sector);
 
 
 //DRAW FUNCTIONS FOR RIGHT SCREEN
+void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed);
+
 
 void drawCirkle(Adafruit_SharpMem& screen);
 

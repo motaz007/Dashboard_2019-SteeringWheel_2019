@@ -69,7 +69,7 @@ Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 uint8_t lap = 0;
 uint8_t maxLap = 10;
 uint8_t lapTime = 0;
-
+uint8_t sector = 0;
 /*------------------------- FUCTIONS -------------------------*/
 
 void initPins() {
@@ -114,13 +114,22 @@ void setup() {
 
   initScreen(leftScreen, LEFTSCREEN);
   initText(leftScreen, LEFTSCREEN);
+  
   delay(500);
   initScreen(rightScreen, RIGHTSCREEN);
+  initText(rightScreen, RIGHTSCREEN);
   
-  
+  drawSector(leftScreen, sector);
   drawLapCount(leftScreen, lap, maxLap);
   drawLapTime(leftScreen, lapTime);
+
+  drawTime(leftScreen, 2000);
+
+  drawSpeed(rightScreen, 2, 150);
+
+  rightScreen.refresh();
   leftScreen.refresh();
+  
 }
 
 
@@ -129,17 +138,26 @@ void setup() {
 void loop() {
   lapTime++;
   lap++;
+  sector++;
   if (lap >10) {
     lap=1;
+  } else if (sector > 5) {
+    sector = 1;
   }
   drawLapCount(leftScreen, lap, maxLap);
-  Serial.println("what?");
+
   drawLapTime(leftScreen, lapTime);
+  drawTime(leftScreen, 200+lapTime);
+
+  drawSector(leftScreen, sector);
+  drawCirkle(rightScreen);
+
+  drawSpeed(rightScreen, 4.8+sector, 5.2+sector);
+  
+
+  rightScreen.refresh();
   leftScreen.refresh();
   delay(1000);
-  drawRectangle(leftScreen);
-  drawCirkle(leftScreen);
-
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/
