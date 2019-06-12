@@ -32,11 +32,19 @@ bool debug = true;
 
 
 // BUTTONS
-#define PIN_BRAKE_ENABLED    26
-#define PIN_LIGHT_ENABLE     28
-#define PIN_MAIN_SWITCH      37
-#define PIN_HAZARD_LIGHT     16
-#define PIN_RESET            30
+
+#define PIN_LIGHT_ENABLE     24
+#define PIN_BATTERY          25
+#define PIN_PROPULTION_POWER 26
+#define PIN_RESET            27
+#define PIN_BRAKE_ENABLED    28
+
+#define PIN_WIPER            5
+#define PIN_HAZARD_LIGHT     6
+#define PIN_RACE_SHOW_MODE   7
+#define PIN_RESET            8
+
+//#define PIN_MAIN_SWITCH      37
 
 // LED's on PCB for CAN
 #define PIN_CAN_RX_LED 23
