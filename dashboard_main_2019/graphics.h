@@ -90,9 +90,9 @@ void drawSector(Adafruit_SharpMem& screen, int sector);
 
 //DRAW FUNCTIONS FOR RIGHT SCREEN
 void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed);
+void drawGear(Adafruit_SharpMem& screen, const char gear);
 
-
-void drawCirkle(Adafruit_SharpMem& screen);
+void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, const uint8_t r);
 
 
 #endif

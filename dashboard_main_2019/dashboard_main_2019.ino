@@ -126,6 +126,7 @@ void setup() {
   drawTime(leftScreen, 2000);
 
   drawSpeed(rightScreen, 2, 150);
+  drawGear(rightScreen, '2');
 
   rightScreen.refresh();
   leftScreen.refresh();
@@ -150,10 +151,20 @@ void loop() {
   drawTime(leftScreen, 200+lapTime);
 
   drawSector(leftScreen, sector);
-  drawCirkle(rightScreen);
 
   drawSpeed(rightScreen, 4.8+sector, 5.2+sector);
-  
+
+  switch(sector) {
+    case 1:
+    drawGear(rightScreen, '1');
+    break;
+    case 2:
+    drawGear(rightScreen, 'N');
+    break;
+    case 3:
+    drawGear(rightScreen, '2');
+    break;
+  }
 
   rightScreen.refresh();
   leftScreen.refresh();

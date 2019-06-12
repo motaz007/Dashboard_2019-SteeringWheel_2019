@@ -79,9 +79,9 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     drawString(screen, "used",  180, 275, 1);
     
   } else if (right) {
-      screen.setFont(&FreeMonoBold9pt7b);
+      screen.setFont(&FreeMono9pt7b);
       screen.setTextColor(BLACK);
-      drawString(screen, "km/h",  160, 80, 1);
+      drawString(screen, "km/h",  153, 80, 1);
     
   }
     
@@ -165,7 +165,7 @@ void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float&
 
     screen.setFont(&FreeMonoBold24pt7b);
     screen.setTextColor(BLACK);
-    screen.fillRect(40, 45, 120, 40, WHITE);
+    screen.fillRect(40, 45, 115, 40, WHITE);
     if (abs(motor1speed-motor2speed) > speedThreshold) {
       drawString(screen, "err.", 40, 80, 1);
     } else {
@@ -181,8 +181,31 @@ void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float&
     }  
 }
 
+void drawGear(Adafruit_SharpMem& screen, const char gear) {
+    screen.fillRect(8, 140, 115, 40, BLACK);
+    
+    screen.setFont(&FreeMonoBold18pt7b);
+    screen.setTextColor(WHITE);
 
-void drawCirkle(Adafruit_SharpMem& screen) {
-   screen.fillCircle(100, 270, 10, WHITE);
-   screen.fillCircle(100, 270, 8, BLACK);
+    switch(gear) {
+      case '1':
+      drawCirkle(screen, 25, 160, 16);
+      break;
+      case 'N':
+      drawCirkle(screen, 65, 160, 18);
+      break;
+      case '2':
+      drawCirkle(screen, 105, 160, 16);
+    }
+    
+    
+    drawString(screen, "1   ", 15, 170, 1);
+    drawString(screen, "N    ", 55, 170, 1);
+    drawString(screen, "2   ", 95, 170, 1);
+}
+
+
+void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, const uint8_t r) {
+   screen.fillCircle(x, y, r, WHITE);
+   screen.fillCircle(x, y, r-2, BLACK);
 }
