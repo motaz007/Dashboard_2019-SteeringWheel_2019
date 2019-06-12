@@ -166,6 +166,9 @@ void loop() {
     break;
   }
 
+  drawVoltageValue(rightScreen, 47.5);
+  drawCurrentValue(rightScreen, 12.4, 13.5);
+
   rightScreen.refresh();
   leftScreen.refresh();
   delay(1000);

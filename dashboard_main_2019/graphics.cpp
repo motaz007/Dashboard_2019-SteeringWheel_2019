@@ -82,7 +82,17 @@ void initText(Adafruit_SharpMem& screen, bool right) {
       screen.setFont(&FreeMono9pt7b);
       screen.setTextColor(BLACK);
       drawString(screen, "km/h",  153, 80, 1);
-    
+      screen.setTextColor(WHITE);
+      drawString(screen, "Volta",  124, 230, 1);
+      drawString(screen, "ge  ",  179, 230, 1);
+
+      screen.setFont(&FreeMonoBold12pt7b);
+      drawString(screen, "V   ", 200, 210, 1);
+      drawString(screen, "A   ", 200, 270, 1);
+
+      screen.setFont(&FreeMono9pt7b);
+      drawString(screen, "Curre",  124, 290, 1);
+      drawString(screen, "nt  ",  179, 290, 1);
   }
     
 }
@@ -204,8 +214,30 @@ void drawGear(Adafruit_SharpMem& screen, const char gear) {
     drawString(screen, "2   ", 95, 170, 1);
 }
 
-
 void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, const uint8_t r) {
    screen.fillCircle(x, y, r, WHITE);
    screen.fillCircle(x, y, r-2, BLACK);
+}
+
+void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal) {
+
+    char str[16];
+    sprintf(str, "%-4.2f", voltageVal);
+
+    screen.fillRect(120, 182, 75, 30, BLACK);
+    screen.setFont(&FreeMonoBold12pt7b);
+    screen.setTextColor(WHITE);
+    drawString(screen, str, 123, 210, 1);
+}
+
+void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current) {
+    double current = (motor1current + motor2current)/2;
+
+    char str[16] = {0};
+    sprintf(str, "%-4.2f", current);
+
+    screen.setFont(&FreeMonoBold12pt7b);
+    screen.setTextColor(WHITE);
+    screen.fillRect(120, 250, 75, 30, BLACK);
+    drawString(screen, str, 123, 270, 1);
 }
