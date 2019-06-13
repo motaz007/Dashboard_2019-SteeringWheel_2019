@@ -50,24 +50,24 @@ void initText(Adafruit_SharpMem& screen, bool right) {
   if(!right) {
     screen.setTextColor(BLACK);
     screen.setFont(&Open_Sans_Bold_12);
-    drawString(screen, Lap, 170, 92, 1);
+    drawString(screen, Lap, 165, 92, 1);
 
     
     
     screen.setTextColor(WHITE);
-    drawString(screen, "time", 180, 190, 1);
+    drawString(screen, "time", 177, 195, 1);
     screen.setFont(&Open_Sans_Regular_12);
-    drawString(screen, "Lap ", 153,190, 1);
+    drawString(screen, "Lap ", 150,195, 1);
 
     
     screen.setFont(&Open_Sans_Regular_12);
-    drawString(screen, "Sector",  50, 270, 1);
+    drawString(screen, "Sector",  47, 270, 1);
     screen.write('r'); //må fikses så man kan ha lengre strenger
 
 
-    drawString(screen, "Time",  150, 270, 1);
+    drawString(screen, "Time",  142, 270, 1);
     screen.setFont(&Open_Sans_Bold_12);
-    drawString(screen, "total",  180, 270, 1);
+    drawString(screen, "total",  177, 270, 1);
     
   } else if (right) {
       screen.setFont(&Open_Sans_Regular_12);
@@ -138,7 +138,7 @@ void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds) {
     sprintf(str, "%02u:%02u", mins, secs);
     
 
-    screen.fillRect(115, 255-M36, 100, M36, WHITE);
+    screen.fillRect(115, 255-M36, 100, M36, BLACK);
     screen.setFont(&Open_Sans_Bold_36);
     screen.setTextColor(WHITE);
     drawString(screen, str, 115, 255, 1);
