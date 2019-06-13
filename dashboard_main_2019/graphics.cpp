@@ -49,41 +49,44 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     
   if(!right) {
     screen.setTextColor(BLACK);
-    screen.setFont(&FreeMonoBold9pt7b);
-    drawString(screen, Lap, 130, 90, 1);
+    screen.setFont(&Open_Sans_Bold_10);
+    drawString(screen, Lap, 170, 90, 1);
 
     
-    screen.setFont(&FreeMono9pt7b);
+    screen.setFont(&Open_Sans_Regular_10);
     screen.setTextColor(WHITE);
-    drawString(screen, "Lap ", 143,190, 1);
-    screen.setFont(&FreeMonoBold9pt7b);
-    drawString(screen, "time", 183, 190, 1);
+    drawString(screen, "Lap ", 153,185, 1);
+    screen.setFont(&Open_Sans_Bold_10);
+    drawString(screen, "time", 180, 185, 1);
 
     
-    screen.setFont(&FreeMono9pt7b);
-    drawString(screen, "Sector",  38, 275, 1);
+    screen.setFont(&Open_Sans_Regular_10);
+    drawString(screen, "Sector",  50, 270, 1);
     screen.write('r'); //må fikses så man kan ha lengre strenger
 
 
-    drawString(screen, "Time",  125, 275, 1);
-    screen.setFont(&FreeMonoBold9pt7b);
-    drawString(screen, "total",  175, 275, 1);
+    drawString(screen, "Time",  150, 265, 1);
+    screen.setFont(&Open_Sans_Bold_10);
+    drawString(screen, "total",  180, 265, 1);
     
   } else if (right) {
-      screen.setFont(&FreeMono9pt7b);
+      screen.setFont(&Open_Sans_Regular_12);
       screen.setTextColor(BLACK);
-      drawString(screen, "km/h",  153, 80, 1);
+      drawString(screen, "km/h",  163, 80, 1);
       screen.setTextColor(WHITE);
-      drawString(screen, "Volta",  124, 230, 1);
-      drawString(screen, "ge  ",  179, 230, 1);
+      screen.setFont(&Open_Sans_Regular_10);
+      drawString(screen, "Voltage",  170, 212, 1);
+      drawString(screen, "ge  ",  200, 212, 1);
+      
+      drawString(screen, "Current",  170, 257, 1);
+      drawString(screen, "nt  ",  200, 257, 1);
 
-      screen.setFont(&FreeMonoBold12pt7b);
-      drawString(screen, "V   ", 200, 210, 1);
-      drawString(screen, "A   ", 200, 270, 1);
+      drawString(screen, "Power",  177, 302, 1);
 
-      screen.setFont(&FreeMono9pt7b);
-      drawString(screen, "Curre",  124, 290, 1);
-      drawString(screen, "nt  ",  179, 290, 1);
+      screen.setFont(&Open_Sans_Bold_18);
+      drawString(screen, "V   ", 200, 200, 1);
+      drawString(screen, "A   ", 200, 245, 1);
+      drawString(screen, "W   ", 195, 290, 1);
   }
     
 }
@@ -96,15 +99,15 @@ void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, c
 
     char str[16];
     if (lapCount < 10) {
-      sprintf(str, " %u/%u", lapCount, maxLaps); //formating string for numbers with one siffer
+      sprintf(str, "%02u/%02u", lapCount, maxLaps); //formating string for numbers with one siffer
     } else {
-      sprintf(str, "%u/%u", lapCount, maxLaps); //formating string with two
+      sprintf(str, "%02u/%02u", lapCount, maxLaps); //formating string with two
     }
    
-    screen.fillRect(lapCountHorizontalMargin, lapCountVerticalMargin-M24/1.2, lapCountHorizontal, M24, WHITE); //fiks variabler. dette er litt for random. sett opp skisse og tegn
-    screen.setFont(&Roboto_Mono_Bold_18);
+    screen.fillRect(lapCountHorizontalMargin, lapCountVerticalMargin-50/1.2, lapCountHorizontal+40, 60, WHITE); //fiks variabler. dette er litt for random. sett opp skisse og tegn
+    screen.setFont(&Open_Sans_Bold_60);
     screen.setTextColor(BLACK);
-    drawString(screen, str, lapCountHorizontalMargin, lapCountVerticalMargin, 1);
+    drawString(screen, str, lapCountHorizontalMargin, lapCountVerticalMargin+10, 1);
 }
 
 void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds) {
@@ -119,9 +122,9 @@ void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds) {
     
 
     screen.fillRect(lapTimeHorizontalMargin, lapTimeVerticalMargin - M24/1.2, lapTimeHorizontal, M24, BLACK);
-    screen.setFont(&FreeMonoBold24pt7b);
+    screen.setFont(&Open_Sans_Bold_36);
     screen.setTextColor(WHITE);
-    drawString(screen, str, 90, 170, 1);
+    drawString(screen, str, 110, 170, 1);
 }
 
 void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds) {
@@ -136,14 +139,14 @@ void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds) {
     
 
     screen.fillRect(timeHorizontalMargin, timeVerticalMargin - M18/1.2, timeHorizontal, M18, BLACK);
-    screen.setFont(&FreeMonoBold18pt7b);
+    screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(WHITE);
-    drawString(screen, str, 125, 250, 1);
+    drawString(screen, str, 155, 250, 1);
 }
 
 void drawRectangle(Adafruit_SharpMem& screen) {
-    screen.fillRect(45, 210, 50, 50, WHITE);
-    screen.fillRect(47, 212, 46, 46, BLACK);
+    screen.fillRect(44, 212, 45, 45, WHITE);
+    screen.fillRect(46, 214, 41, 41, BLACK);
 
 }
 
@@ -152,7 +155,7 @@ void drawSector(Adafruit_SharpMem& screen, int sector) {
     drawRectangle(screen);
     char str[8] = {0};
     sprintf(str, "%u", sector);
-    screen.setFont(&FreeMonoBold24pt7b);
+    screen.setFont(&Open_Sans_Bold_36);
     screen.setTextColor(WHITE);
     drawString(screen, str, 55, 249, 1);
 }
@@ -164,9 +167,9 @@ void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float&
     uint8_t speedThreshold = 10;
     float motorSpeed = 0;
 
-    screen.setFont(&Open_Sans_Bold_18);
+    screen.setFont(&Open_Sans_Bold_60);
     screen.setTextColor(BLACK);
-    screen.fillRect(40, 45, 115, 40, WHITE);
+    screen.fillRect(40, 35, 115, 60, WHITE);
     if (abs(motor1speed-motor2speed) > speedThreshold) {
       drawString(screen, "err.", 40, 80, 1);
     } else {
@@ -183,25 +186,25 @@ void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float&
 }
 
 void drawGear(Adafruit_SharpMem& screen, const char gear) {
-    screen.fillRect(8, 140, 115, 40, BLACK);
+    screen.fillRect(6, 138, 120, 45, BLACK);
     
-    screen.setFont(&FreeMonoBold18pt7b);
+    screen.setFont(&Open_Sans_Bold_36);
     screen.setTextColor(WHITE);
 
     switch(gear) {
       case '1':
-      drawCirkle(screen, 25, 160, 16);
+      drawCirkle(screen, 26, 157, 18);
       break;
       case 'N':
-      drawCirkle(screen, 65, 160, 18);
+      drawCirkle(screen, 65, 158, 20);
       break;
       case '2':
-      drawCirkle(screen, 105, 160, 16);
+      drawCirkle(screen, 105, 158, 18);
     }
     
     
     drawString(screen, "1   ", 15, 170, 1);
-    drawString(screen, "N    ", 55, 170, 1);
+    drawString(screen, "N    ", 50, 170, 1);
     drawString(screen, "2   ", 95, 170, 1);
 }
 
@@ -225,10 +228,10 @@ void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal) {
     char str[16];
     sprintf(str, "%-4.2f", voltageVal);
 
-    screen.fillRect(120, 182, 75, 30, BLACK);
-    screen.setFont(&FreeMonoBold12pt7b);
+    screen.fillRect(140, 186, 55, 15, BLACK);
+    screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(WHITE);
-    drawString(screen, str, 123, 210, 1);
+    drawString(screen, str, 145, 200, 1);
 }
 
 void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current) {
@@ -237,8 +240,29 @@ void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, co
     char str[16] = {0};
     sprintf(str, "%-4.2f", current);
 
-    screen.setFont(&FreeMonoBold12pt7b);
+    screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(WHITE);
-    screen.fillRect(120, 250, 75, 30, BLACK);
-    drawString(screen, str, 123, 270, 1);
+    screen.fillRect(140, 230, 55, 15, BLACK);
+    drawString(screen, str, 145, 245, 1);
+}
+
+void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, const double& motor2power) {
+    double current = (motor1power + motor2power)/2;
+
+    char str[16] = {0};
+    sprintf(str, "%-4.2f", current);
+
+    screen.setFont(&Open_Sans_Bold_18);
+    screen.setTextColor(WHITE);
+    screen.fillRect(140, 275, 55, 15, BLACK);
+    drawString(screen, str, 145, 290, 1);
+}
+
+void drawRaceMode(Adafruit_SharpMem& screen, bool on) {
+    screen.fillRect(5, 300, 20, 20, BLACK);
+    if(on) {
+      screen.setFont(&Open_Sans_Bold_10);
+      screen.setTextColor(WHITE);
+      drawString(screen, "R", 10, 310, 1);      
+    }
 }

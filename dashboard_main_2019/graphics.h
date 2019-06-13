@@ -21,18 +21,22 @@
 #include "lightIcon.h"
 
 //Fonts:
-#include "fonts/FreeMono9pt7b.h"
-#include "fonts/FreeMono12pt7b.h"
-#include "fonts/FreeMono18pt7b.h"
-#include "fonts/FreeMono24pt7b.h"
-#include "DSEG7_7SEGGCHAN_MINI_Regular_16.h"
-#include "Roboto_Mono_Bold_18.h"
-#include "Open_Sans_Bold_18.h"
 
-#include "fonts/FreeMonoBold9pt7b.h"
-#include "fonts/FreeMonoBold12pt7b.h"
-#include "fonts/FreeMonoBold18pt7b.h"
-#include "fonts/FreeMonoBold24pt7b.h"
+//BOLD
+#include "fonts/Open_Sans_Bold_60.h"
+#include "fonts/Open_Sans_Bold_36.h"
+#include "fonts/Open_Sans_Bold_18.h"
+#include "fonts/Open_Sans_Bold_12.h"
+#include "fonts/Open_Sans_Bold_10.h"
+
+
+//REGULAR
+#include "fonts/Open_Sans_Regular_60.h"
+#include "fonts/Open_Sans_Regular_36.h"
+#include "fonts/Open_Sans_Regular_18.h"
+#include "fonts/Open_Sans_Regular_12.h"
+#include "fonts/Open_Sans_Regular_10.h"
+
 
 enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
@@ -101,5 +105,7 @@ void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, con
 void drawLightIcon(Adafruit_SharpMem& screen, bool on);
 void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal);
 void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current);
+void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, const double& motor2power);
+void drawRaceMode(Adafruit_SharpMem& screen, bool on);
 
 #endif

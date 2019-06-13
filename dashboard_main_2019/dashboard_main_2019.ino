@@ -167,18 +167,21 @@ void loop() {
 
   switch(sector) {
     case 1:
-    drawGear(rightScreen, '1');
-    break;
+      drawGear(rightScreen, '1');
+      drawRaceMode(rightScreen, false);
+      break;
     case 2:
-    drawGear(rightScreen, 'N');
-    break;
+      drawGear(rightScreen, 'N');
+      drawRaceMode(rightScreen, true);
+      break;
     case 3:
-    drawGear(rightScreen, '2');
-    break;
+      drawGear(rightScreen, '2');
+      break;
   }
 
-  drawVoltageValue(rightScreen, 47.5);
-  drawCurrentValue(rightScreen, 12.4, 13.5);
+  drawVoltageValue(rightScreen, 47.5+lap*0.1);
+  drawCurrentValue(rightScreen, 12.4+lap*1.1, 13.5+lap*1.1);
+  drawPowerConsumption(rightScreen, 5.4+lap*4.1, 5.5+lap*4.1);
 
   rightScreen.refresh();
   leftScreen.refresh();
