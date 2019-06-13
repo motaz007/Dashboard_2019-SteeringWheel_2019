@@ -173,9 +173,11 @@ void loop() {
     case 2:
       drawGear(rightScreen, 'N');
       drawRaceMode(rightScreen, true);
+      drawLightIcon(rightScreen, false);
       break;
     case 3:
       drawGear(rightScreen, '2');
+      drawLightIcon(rightScreen, true);
       break;
   }
 

@@ -24,7 +24,9 @@
 
 //BOLD
 #include "fonts/Open_Sans_Bold_60.h"
+#include "fonts/Open_Sans_Bold_45.h"
 #include "fonts/Open_Sans_Bold_36.h"
+#include "fonts/Open_Sans_Bold_24.h"
 #include "fonts/Open_Sans_Bold_18.h"
 #include "fonts/Open_Sans_Bold_12.h"
 #include "fonts/Open_Sans_Bold_10.h"
@@ -33,6 +35,7 @@
 //REGULAR
 #include "fonts/Open_Sans_Regular_60.h"
 #include "fonts/Open_Sans_Regular_36.h"
+#include "fonts/Open_Sans_Regular_24.h"
 #include "fonts/Open_Sans_Regular_18.h"
 #include "fonts/Open_Sans_Regular_12.h"
 #include "fonts/Open_Sans_Regular_10.h"
@@ -52,10 +55,12 @@ enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 /*----------- SCREEN VARIABLES ----------- */
 
 //FONT HEIGHTS
-const uint8_t M24 = 40;
-const uint8_t M18 = 28;
-const uint8_t M12 = 12;
-const uint8_t M9 = 9;
+const uint8_t M60 = 47;
+const uint8_t M45 = 33;
+const uint8_t M36 = 27;
+const uint8_t M18 = 15;
+const uint8_t M12 = 10;//not used, therefore not tested. guess value
+const uint8_t M10 = 7;
 
 //Lap Count
 const uint8_t lapCountVerticalMargin = 65; //to bottom left?
