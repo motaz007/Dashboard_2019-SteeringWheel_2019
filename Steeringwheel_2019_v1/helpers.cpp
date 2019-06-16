@@ -13,21 +13,14 @@ int readThrottle(int PIN_THROTTLE, volatile uint8_t buttons[], bool ccActive, bo
     static const int THROTTLE_HIGH = 255;
     static const int THROTTLE_THRESHOLD = 20;
     
+    throttleRaw = analogRead(PIN_THROTTLE);
     throttle = map(throttleRaw, THROTTLE_RAW_LOW, THROTTLE_RAW_HIGH, THROTTLE_LOW, THROTTLE_HIGH);
     
-    if (!ccActive && !optimalCurrentActive) {
-        // only read new throttle command if cc is inactive (i.e. off)
-        throttleRaw = analogRead(PIN_THROTTLE);
-    }
-    else if (ccActive && !optimalCurrentActive) {
-        // is active (i.e. on)
-        Serial.print(" CC ");
-    }
-    else if (!ccActive && optimalCurrentActive) {
-        throttle = OPTIMAL_CURRENT_VAL;
-        Serial.print(" OPTIMAL CURRENT ");
+    
+    if (optimalCurrentActive) {
+        //throttle = OPTIMAL_CURRENT_VAL;
+        Serial.println(" OPTIMAL CURRENT ");
 
-        // to get cc to work corretly
         // +1 at end because map returned 29...
         throttleRaw = map(throttle, THROTTLE_LOW, THROTTLE_HIGH, THROTTLE_RAW_LOW, THROTTLE_RAW_HIGH) + 1;
     }
@@ -62,12 +55,17 @@ int readRegen(int PIN_REGEN, volatile uint8_t *buttons, bool ccActive, bool opti
     }
 
     if (optimalBrakeActive) {
-        regen = OPTIMAL_BRAKE_VAL;
-        Serial.print(" OPTIMAL BRAKE ");
+        //regen = OPTIMAL_BRAKE_VAL;
+        Serial.println(" OPTIMAL BRAKE ");
     }
 
     Serial.print(" R: "); Serial.print(regenRaw); Serial.print("-"); Serial.print(regen); Serial.print(" ");    
     return regen;
+}
+
+void initSerial() {
+    // to communicate with the computer
+    Serial.begin(SERIAL_BAUDRATE);
 }
 
 void clockSpeed2Mhz(bool debug){ //Serial will not be available at this clockspeed

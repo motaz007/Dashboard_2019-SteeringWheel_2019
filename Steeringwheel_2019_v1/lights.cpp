@@ -27,23 +27,20 @@ void startUpSwheelLight(Adafruit_NeoPixel& sWheelLights){
      sWheelLedOn = true;
 }
 
-void sWheelError(Adafruit_NeoPixel& sWheelLights){
+void sWheelLight(Adafruit_NeoPixel& sWheelLights, bool deadManSwitch){
   if(sWheelLedOn){
+    if(deadManSwitch){
+      for (int i = 0; i < sWheelLights.numPixels(); ++i) {
+      sWheelLights.setPixelColor(i, sWheelLights.Color(0,0,0,255));
+      }
+      sWheelLights.show();
+      }else{
     for (int i = 0; i < sWheelLights.numPixels(); ++i) {
       sWheelLights.setPixelColor(i, COLOR_ERROR);
       
     }
     sWheelLights.show();
   }
-}
-
-void sWheelOK(Adafruit_NeoPixel& sWheelLights) {
-  if(sWheelLedOn){
-    for (int i = 0; i < sWheelLights.numPixels(); ++i) {
-      sWheelLights.setPixelColor(i, sWheelLights.Color(0,0,0,255));
-      
-    }
-    sWheelLights.show();
   }
 }
 
