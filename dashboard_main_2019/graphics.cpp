@@ -22,7 +22,7 @@ void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int s
   
 }
 
-void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size) {
+void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size) { //fix this
     screen.setCursor(x, y);
     screen.setTextSize(size);
 
@@ -43,16 +43,12 @@ void initScreen(Adafruit_SharpMem& screen, bool right) {
 }
 
 void initText(Adafruit_SharpMem& screen, bool right) {
-    char Lap[] = "Lap";
-
-    char sector[32] = "Sector";
     
   if(!right) {
     screen.setTextColor(BLACK);
     screen.setFont(&Open_Sans_Bold_12);
-    drawString(screen, Lap, 165, 92, 1);
-
-    
+    drawString(screen, "Lap", 165, yMarginSpeedLapCount + textVerticalMargin, 1);
+   
     
     screen.setTextColor(WHITE);
     drawString(screen, "time", 177, 195, 1);
@@ -72,7 +68,7 @@ void initText(Adafruit_SharpMem& screen, bool right) {
   } else if (right) {
       screen.setFont(&Open_Sans_Regular_12);
       screen.setTextColor(BLACK);
-      drawString(screen, "km/h",  163, 80, 1);
+      drawString(screen, "km/h",  163, yMarginSpeedLapCount, 1);
       screen.setTextColor(WHITE);
       screen.setFont(&Open_Sans_Regular_10);
       drawString(screen, "Voltage",  170, 212, 1);
@@ -95,19 +91,15 @@ void initText(Adafruit_SharpMem& screen, bool right) {
 
 //DRAW FUNCTIONS FOR LEFT SCREEN
 
-void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, const uint8_t& maxLaps) {
-
+void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, const uint8_t& maxLaps) 
+{
+    screen.setFont(&Open_Sans_Bold_60);                                                     //setting correct font and size
+    screen.setTextColor(BLACK);                                                               
+    screen.fillRect(30, yMarginSpeedLapCount-fontHeight60, 170, fontHeight60, WHITE);       //erase previous text
+    
     char str[16];
-    if (lapCount < 10) {
-      sprintf(str, "%02u/%02u", lapCount, maxLaps); //formating string for numbers with one siffer
-    } else {
-      sprintf(str, "%02u/%02u", lapCount, maxLaps); //formating string with two
-    }
-   
-    screen.fillRect(30, 35, 170, M60, WHITE); //fiks variabler. dette er litt for random. sett opp skisse og tegn
-    screen.setFont(&Open_Sans_Bold_60);
-    screen.setTextColor(BLACK);
-    drawString(screen, str, lapCountHorizontalMargin, 80, 1);
+    sprintf(str, "%-u/%u", lapCount, maxLaps);                                              //formating string
+    drawString(screen, str, lapCountHorizontalMargin, yMarginSpeedLapCount, 1);             //printing new text
 }
 
 void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds) {
@@ -121,7 +113,7 @@ void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds) {
     sprintf(str, "%02u:%02u", mins, secs);
     
 
-    screen.fillRect(90, 147, 120, M45, BLACK);
+    screen.fillRect(90, 147, 120, fontHeight45, BLACK);
     screen.setFont(&Open_Sans_Bold_45);
     screen.setTextColor(WHITE);
     drawString(screen, str, 90, 180, 1);
@@ -138,13 +130,14 @@ void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds) {
     sprintf(str, "%02u:%02u", mins, secs);
     
 
-    screen.fillRect(115, 255-M36, 100, M36, BLACK);
+    screen.fillRect(115, 255-fontHeight36, 100, fontHeight36, BLACK);
     screen.setFont(&Open_Sans_Bold_36);
     screen.setTextColor(WHITE);
     drawString(screen, str, 115, 255, 1);
 }
 
-void drawRectangle(Adafruit_SharpMem& screen) {
+void drawRectangle(Adafruit_SharpMem& screen)//, int width, int height) 
+{
     screen.fillRect(45, 210, 45, 45, WHITE);
     screen.fillRect(47, 212, 41, 41, BLACK);
 
@@ -162,35 +155,39 @@ void drawSector(Adafruit_SharpMem& screen, int sector) {
 //DRAW FUNCTIONS FOR RIGHT SCREEN
 
 
-void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed) {
-    uint8_t speedThreshold = 10;
+void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed) 
+{
+    const uint8_t speedThreshold = 10;                                                      //move to global? or argument?                                                 
     float motorSpeed = 0;
-
-    screen.setFont(&Open_Sans_Bold_60);
+    
+    screen.setFont(&Open_Sans_Bold_60);                                                     //setting correct font and size
     screen.setTextColor(BLACK);
-    screen.fillRect(40, 35, 123, M60, WHITE);
-    if (abs(motor1speed-motor2speed) > speedThreshold) {
-      drawString(screen, "err.", 40, 80, 1);
+    screen.fillRect(40, yMarginSpeedLapCount-fontHeight60, 123, fontHeight60, WHITE);       //erase previous text
+    
+    if (abs(motor1speed-motor2speed) > speedThreshold) {                                    //figure out if speed sent over CANbus is ok to use
+      drawString(screen, "err.", 40, yMarginSpeedLapCount, 1);                              //err. is printed if not
     } else {
-      motorSpeed = (motor1speed + motor2speed)/2;
+      motorSpeed = (motor1speed + motor2speed)/2;                                           //else avrage speed is printed
       char str[16] = {0};
-      if (motorSpeed < 10) { //fix this please
-              sprintf(str, "%u%0.1f", motorSpeed, motorSpeed);
-              drawString(screen, str, 40, 80, 1);
-      } else {
-              sprintf(str, "%0.1f", motorSpeed);
-              drawString(screen, str, 40, 80, 1);
-      }
+      sprintf(str, "%02u", motorSpeed);
+      drawString(screen, str, 40, yMarginSpeedLapCount, 1);
+     
     }  
 }
 
 void drawGear(Adafruit_SharpMem& screen, const char gear) {
-    screen.fillRect(6, 138, 120, 45, BLACK);
+    //Position variables
+    const uint8_t xMargin = 6;
+    const uint8_t yMargin = 138;
+    const uint8_t width = 120;
+    const uint8_t height = 45;
     
-    screen.setFont(&Open_Sans_Bold_36);
+    screen.setFont(&Open_Sans_Bold_36); //sets font+color and wipes out previous text
     screen.setTextColor(WHITE);
-
-    switch(gear) {
+    screen.fillRect(xMargin, yMargin, width, height, BLACK);
+    
+    
+    switch(gear) { //gear desides where to place circle
       case '1':
       drawCirkle(screen, 26, 157, 18);
       break;
@@ -200,7 +197,6 @@ void drawGear(Adafruit_SharpMem& screen, const char gear) {
       case '2':
       drawCirkle(screen, 105, 158, 18);
     }
-    
     
     drawString(screen, "1   ", 15, 170, 1);
     drawString(screen, "N    ", 50, 170, 1);
@@ -227,7 +223,7 @@ void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal) {
     char str[16];
     sprintf(str, "%-4.2f", voltageVal);
 
-    screen.fillRect(145, 186, 50, M18, BLACK);
+    screen.fillRect(145, 186, 50, fontHeight18, BLACK);
     screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(WHITE);
     drawString(screen, str, 145, 200, 1);
@@ -241,7 +237,7 @@ void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, co
 
     screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(WHITE);
-    screen.fillRect(145, 230, 50, M18, BLACK);
+    screen.fillRect(145, 230, 50, fontHeight18, BLACK);
     drawString(screen, str, 145, 245, 1);
 }
 
@@ -253,7 +249,7 @@ void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, 
 
     screen.setFont(&Open_Sans_Bold_18);
     screen.setTextColor(WHITE);
-    screen.fillRect(145, 277, 50, M18, BLACK);
+    screen.fillRect(145, 277, 50, fontHeight18, BLACK);
     drawString(screen, str, 145, 290, 1);
 }
 

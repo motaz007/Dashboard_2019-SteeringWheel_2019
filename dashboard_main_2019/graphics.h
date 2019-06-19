@@ -55,12 +55,19 @@ enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 /*----------- SCREEN VARIABLES ----------- */
 
 //FONT HEIGHTS
-const uint8_t M60 = 47;
-const uint8_t M45 = 33;
-const uint8_t M36 = 27;
-const uint8_t M18 = 15;
-const uint8_t M12 = 10;//not used, therefore not tested. guess value
-const uint8_t M10 = 7;
+//this is used because rectangles starts top left and text buttom left
+const uint8_t fontHeight60 = 47;
+const uint8_t fontHeight45 = 33;
+const uint8_t fontHeight36 = 27;
+const uint8_t fontHeight18 = 15;
+const uint8_t fontHeight12 = 10;                                                            //not used, therefore not tested. guess value
+const uint8_t fontHeight10 = 7;
+const uint8_t textVerticalMargin = 12;                                                      //space between lines
+
+//VERITCAL MARGINS
+)
+    const uint8_t speedThreshold = 10;                                                      //move to global? or argument?  
+const uint8_t yMarginSpeedLapCount = 80;                                                    //margin to bottom line of lap count and speed
 
 //Lap Count
 const uint8_t lapCountVerticalMargin = 65; //to bottom left?
@@ -86,7 +93,7 @@ const uint8_t timeHorizontal = 105;
 }*/
 
 
-void drawBackground(Adafruit_SharpMem& screen, bool right=true); // Draws the background bitmap defined in a .h file.
+void drawBackground(Adafruit_SharpMem& screen, bool right=true);                            // Draws the background bitmap defined in a .h file.
 void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);
 void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1); //denne trengs!!
 
