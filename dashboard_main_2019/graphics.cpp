@@ -47,7 +47,7 @@ void initText(Adafruit_SharpMem& screen, bool right) {
   if(!right) {
     screen.setTextColor(BLACK);
     screen.setFont(&Open_Sans_Bold_12);
-    drawString(screen, "Lap", 165, yMarginSpeedLapCount + textVerticalMargin, 1);
+    drawString(screen, "Lap ", 165, yMarginSpeedLapCount + textVerticalMargin, 1);
    
     
     screen.setTextColor(WHITE);
@@ -95,10 +95,10 @@ void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, c
 {
     screen.setFont(&Open_Sans_Bold_60);                                                     //setting correct font and size
     screen.setTextColor(BLACK);                                                               
-    screen.fillRect(30, yMarginSpeedLapCount-fontHeight60, 170, fontHeight60, WHITE);       //erase previous text
+    screen.fillRect(30, yMarginSpeedLapCount-fontHeight60, 170, fontHeight60+1, WHITE);     //erase previous text
     
     char str[16];
-    sprintf(str, "%-u/%u", lapCount, maxLaps);                                              //formating string
+    sprintf(str, "%02u/%02u", lapCount, maxLaps); //formating string
     drawString(screen, str, lapCountHorizontalMargin, yMarginSpeedLapCount, 1);             //printing new text
 }
 
@@ -158,19 +158,19 @@ void drawSector(Adafruit_SharpMem& screen, int sector) {
 void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed) 
 {
     const uint8_t speedThreshold = 10;                                                      //move to global? or argument?                                                 
-    float motorSpeed = 0;
+    int motorSpeed = 0;
     
     screen.setFont(&Open_Sans_Bold_60);                                                     //setting correct font and size
     screen.setTextColor(BLACK);
-    screen.fillRect(40, yMarginSpeedLapCount-fontHeight60, 123, fontHeight60, WHITE);       //erase previous text
+    screen.fillRect(40, yMarginSpeedLapCount-fontHeight60, 123, fontHeight60+1, WHITE);       //erase previous text
     
     if (abs(motor1speed-motor2speed) > speedThreshold) {                                    //figure out if speed sent over CANbus is ok to use
-      drawString(screen, "err.", 40, yMarginSpeedLapCount, 1);                              //err. is printed if not
+      drawString(screen, "err.", 55, yMarginSpeedLapCount, 1);                              //err. is printed if not
     } else {
       motorSpeed = (motor1speed + motor2speed)/2;                                           //else avrage speed is printed
       char str[16] = {0};
       sprintf(str, "%02u", motorSpeed);
-      drawString(screen, str, 40, yMarginSpeedLapCount, 1);
+      drawString(screen, str, 85, yMarginSpeedLapCount, 1);
      
     }  
 }

@@ -56,7 +56,7 @@ enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
 //FONT HEIGHTS
 //this is used because rectangles starts top left and text buttom left
-const uint8_t fontHeight60 = 47;
+const uint8_t fontHeight60 = 48;
 const uint8_t fontHeight45 = 33;
 const uint8_t fontHeight36 = 27;
 const uint8_t fontHeight18 = 15;
@@ -65,9 +65,9 @@ const uint8_t fontHeight10 = 7;
 const uint8_t textVerticalMargin = 12;                                                      //space between lines
 
 //VERITCAL MARGINS
-)
-    const uint8_t speedThreshold = 10;                                                      //move to global? or argument?  
-const uint8_t yMarginSpeedLapCount = 80;                                                    //margin to bottom line of lap count and speed
+
+const uint8_t speedThreshold = 10;                                                      //move to global? or argument?  
+const uint8_t yMarginSpeedLapCount = 100;                                                    //margin to bottom line of lap count and speed
 
 //Lap Count
 const uint8_t lapCountVerticalMargin = 65; //to bottom left?

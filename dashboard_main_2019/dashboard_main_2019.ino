@@ -163,7 +163,7 @@ void loop() {
 
   drawSector(leftScreen, sector);
 
-  drawSpeed(rightScreen, 4.8+sector, 5.2+sector);
+  drawSpeed(rightScreen, 22+2*sector, 21+2*sector);
 
   switch(sector) {
     case 1:
