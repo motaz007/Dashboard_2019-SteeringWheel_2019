@@ -36,7 +36,7 @@ bool debug = true;
 #define PIN_LIGHT_ENABLE     24
 #define PIN_BATTERY          25
 #define PIN_PROPULTION_POWER 26
-#define PIN_RESET            27
+#define PIN_BLANK            27
 #define PIN_BRAKE_ENABLED    28
 
 #define PIN_WIPER            5
