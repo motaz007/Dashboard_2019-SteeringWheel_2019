@@ -62,14 +62,14 @@ const uint8_t fontHeight60 = 48;
 const uint8_t fontHeight45 = 33;
 const uint8_t fontHeight36 = 27;
 const uint8_t fontHeight18 = 15;
-const uint8_t fontHeight12 = 10;                                                            //not used, therefore not tested. guess value
+const uint8_t fontHeight12 = 10;                                                                           //not used, therefore not tested. guess value
 const uint8_t fontHeight10 = 7;
-const uint8_t textVerticalMargin = 12;                                                      //space between lines
+const uint8_t textVerticalMargin = 12;                                                                     //space between lines
 
 //VERITCAL MARGINS
 
-const uint8_t speedThreshold = 10;                                                           //move to global? or argument?  
-const uint8_t yMarginSpeedLapCount = 100;                                                    //margin to bottom line of lap count and speed
+const uint8_t speedThreshold = 10;                                                                         //move to global? or argument?  
+const uint8_t yMarginSpeedLapCount = 100;                                                                  //margin to bottom line of lap count and speed
 
 //Lap Count
 const uint8_t lapCountVerticalMargin = 65; //to bottom left?
@@ -95,9 +95,9 @@ const uint8_t timeHorizontal = 105;
 }*/
 
 
-void drawBackground(Adafruit_SharpMem& screen, bool right=true);                            // Draws the background bitmap defined in a .h file.
+void drawBackground(Adafruit_SharpMem& screen, bool right=true);                                          // Draws the background bitmap defined in a .h file.
 void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);
-void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1); //denne trengs!!
+void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);               //denne trengs!!
 
 //INIT FUNCTIONS
 

@@ -67,7 +67,7 @@ void readCan()
 {
   while(Can0.available()) 
   {
-   Can0.read(rxMsg);
+   Can0.read(rxMsg);                                                                //saves new can-message to rxMsg
   }
   
   switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
@@ -77,11 +77,10 @@ void readCan()
     case motor1ID:
       motor1Msg = rxMsg;
       break;
-    case  motor2ID:
+    case motor2ID:
       motor2Msg = rxMsg;
   }
 }
-  
 
 void printCanToSerial(const CAN_message_t& msg, bool debug)
 {

@@ -16,7 +16,7 @@ bool debug = true;
 /*-------------------------- PINS -------------------------*/
 
 /* COMM PARAMETERS */
-// RIGHTSCREEN
+// RIGHT SCREEN
 #define SR_SCK  13
 #define SR_MOSI 11
 #define SR_CS   10
@@ -32,19 +32,16 @@ bool debug = true;
 
 
 // BUTTONS
-
-//Right
 #define PIN_WIPER            5
-#define PIN_HAZARD_LIGHT     6
-#define PIN_RACE_SHOW_MODE   7
+#define PIN_HAZARD           6
+#define PIN_RACE_MODE        7
 #define PIN_RESET            8
 
-//left
-#define PIN_LIGHT_ENABLE     24
-#define PIN_BATTERY          25
-#define PIN_PROPULTION_POWER 26
+#define PIN_LIGHT_BUTTON     24
+#define PIN_BATTERY          25                                                             //not used?
+#define PIN_PROPULTION_POWER 26                                                             //not used?
 #define PIN_BLANK            27
-#define PIN_BRAKE_ENABLED    28
+#define PIN_BRAKE            28
 
 
 // LED's on PCB for CAN
@@ -68,48 +65,36 @@ Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KH
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
 Adafruit_SharpMem leftScreen(SL_SCK, SL_MOSI, SL_CS, WIDTH, HEIGHT); 
-
 Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 
 /*------------------------- FUCTIONS -------------------------*/
 
-
-// BUTTONS
-
-#define PIN_WIPER            5
-#define PIN_HAZARD           6
-#define PIN_RACE_MODE        7
-#define PIN_RESET            8
-
-#define PIN_LIGHT_BUTTON     24
-#define PIN_BATTERY          25                                                             //not used?
-#define PIN_PROPULTION_POWER 26                                                             //not used?
-#define PIN_BLANK            27
-#define PIN_BRAKE            28
-
 void initPins() {
 
-    pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //interrupt wiper
+    pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //init wiper with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_WIPER), wiper_ISR, FALLING);
 
-    pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //interrupt hazzard light
+    pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //init hazzard light with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_HAZARD), hazard_ISR, FALLING);
     
-    pinMode(PIN_RACE_MODE, INPUT_PULLUP);                                                   //interrupt race mode
+    pinMode(PIN_RACE_MODE, INPUT_PULLUP);                                                   //init race mode with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_RACE_MODE), raceMode_ISR, FALLING);
     
-    pinMode(PIN_RESET, INPUT_PULLUP);                                                       //interrupt reset
+    pinMode(PIN_RESET, INPUT_PULLUP);                                                       //ini reset button with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_RESET), reset_ISR, FALLING);
 
-    pinMode(PIN_LIGHT_BUTTON, INPUT_PULLUP);                                                //interrupt light
+    pinMode(PIN_LIGHT_BUTTON, INPUT_PULLUP);                                                //init light button with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_BUTTON), lights_ISR, FALLING);
     
-    pinMode(PIN_BLANK, INPUT_PULLUP);                                                       //interrupt blank
+    pinMode(PIN_BLANK, INPUT_PULLUP);                                                       //init blank button with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_BLANK), blank_ISR, FALLING);
 
-    
-    pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //interrupt brake
+    pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //init brake pedal sensor (button) with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
+
+    if(debug) {
+      Serial.println("all buttons initialized with interrupt");
+    }
 }
 
 
@@ -119,16 +104,16 @@ void setup() {
   //clockSpeedHigh(debug);
   initSerial();
   initCAN();
-  initPins();
   initCanMessage(txMsg, 3); 
 
   frontlights.begin(); //fix this
   backlights.begin();  // --//--
-  startUpLights(frontlights, backlights); //change name
+  startUpLights(frontlights, backlights); //change name?
   
   initScreen(leftScreen, LEFTSCREEN);
   initScreen(rightScreen, RIGHTSCREEN);
 
+  initPins();                                                                                //initPins needs to be last to avoid malfunction
 }
 
 
@@ -241,7 +226,7 @@ void blank_ISR(){
 }
 
 void brake_ISR() { //interrupt function for brake light
-    // this button is reversed
+    // this button is reversed (physically, normally open)
 
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
