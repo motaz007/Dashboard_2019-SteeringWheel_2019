@@ -133,7 +133,7 @@ void wiper_ISR(){
   Serial.println("wiper pressed"); //if debug
   
   if (interrupt_time - last_interrupt_time > 100){ //wrong?
-    int state = digitalRead(PIN_HAZARD_LIGHT);
+    int state = digitalRead(PIN_HAZARD);
     if(state == LOW && windowWiperON == false){
       windowWiperON = true;
     }else{
@@ -151,7 +151,7 @@ void hazard_ISR(){
   
   if (interrupt_time - last_interrupt_time > 100) //not doing anything?
      {
-      int state = digitalRead(PIN_HAZARD_LIGHT);
+      int state = digitalRead(PIN_HAZARD);
       if( state == LOW && hazardLightON == false){
         hazardLightON = true;
       }else{
@@ -197,7 +197,7 @@ void lights_ISR(){
   Serial.println("lights pressed"); //if debug
   
   if (interrupt_time - last_interrupt_time > 100){
-    int state = digitalRead(PIN_HAZARD_LIGHT);
+    int state = digitalRead(PIN_HAZARD);
     if(state == LOW && lightON == false){
       lightON = true;
       if(raceModeON){
@@ -235,7 +235,7 @@ void brake_ISR() { //interrupt function for brake light
   if (interrupt_time - last_interrupt_time > 100)
   {
     delay(10);
-    int state = digitalRead(PIN_BRAKE_ENABLED);
+    int state = digitalRead(PIN_BRAKE);
 
     if (state == HIGH) {  // RISING -- is unpressed
         // brake lights off 
