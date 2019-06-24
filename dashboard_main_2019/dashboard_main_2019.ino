@@ -118,8 +118,8 @@ void setup() {
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-
-  delay(1000);
+  updateScreen(leftScreen, LEFTSCREEN);
+  updateScreen(rightScreen, RIGHTSCREEN);
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/

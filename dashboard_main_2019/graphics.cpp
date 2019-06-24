@@ -83,13 +83,13 @@ void initText(Adafruit_SharpMem& screen, bool right) {
       drawString(screen, "km/h",  163, yMarginSpeedLapCount, 1);
       screen.setTextColor(WHITE);
       screen.setFont(&Open_Sans_Regular_10);
-      drawString(screen, "Voltage",  170, 212, 1);
+      drawString(screen, "Voltage",  170, 212, 1);                                                   //sort of waste to write both V and Voltage
       drawString(screen, "ge  ",  200, 212, 1);
       
-      drawString(screen, "Current",  170, 257, 1);
+      drawString(screen, "Current",  170, 257, 1);                                                   //-----//------ A and Current
       drawString(screen, "nt  ",  200, 257, 1);
 
-      drawString(screen, "Power",  177, 302, 1);
+      drawString(screen, "Energy",  177, 302, 1);                                                    //-----//------ W and Energy
 
       screen.setFont(&Open_Sans_Bold_18);
       drawString(screen, "V   ", 200, 200, 1);
@@ -125,6 +125,7 @@ void updateScreen(Adafruit_SharpMem& screen, bool right)
    drawTime(screen, 1000);
    drawSector(screen, sWheelMsg.buf[7]);                                                             //sent at last position of steering wheel
  }
+   screen.refresh();
 }
 
 //DRAW FUNCTIONS FOR LEFT SCREEN
