@@ -14,26 +14,23 @@
 
 int canID[] = {swheelID, someOtherID};
 
-void testFunk(CAN_message_t& rxMsg, CAN_message_t& txMsg) {
-  rxMsg = txMsg;
-}
-
 void canFilter() {
   int numerOfIDs = sizeof(canID)/4;
   int filterInt[numerOfIDs+1];
 
-  for (int j=0; j<numerOfIDs; j++) { //devides 14 mailboxes on the different ID's
+  for (int j=0; j<numerOfIDs; j++) {                                                //devides 14 mailboxes on the different ID's
     filterInt[j] = (14.0/numerOfIDs)*j;
   }
-  filterInt[numerOfIDs] = 14; //all messages will be sent through if not all 14 mailboxes are used, therfore the last ID vill get the rest
-  
-  for (int i{0}; i<numerOfIDs; i++) { //creates the 14 maiboxes for the ID's
+  filterInt[numerOfIDs] = 14;                                                       //all messages will be sent through if not all 14 mailboxes are used, 
+                                                                                    //therfore the last ID vill get the rest
+
+  for (int i{0}; i<numerOfIDs; i++) {                                               //creates the 14 maiboxes for the ID's
     CAN_filter_t filter; 
     filter.id = canID[i];
     
     for (int filterNum=filterInt[i]; filterNum<filterInt[i+1]; filterNum++)
     {
-    Can0.setMask(0x7FF<<18,filterNum);          //require exact match on filter.id, bitshift is necessary for 11-bit id's
+    Can0.setMask(0x7FF<<18,filterNum);                                              //require exact match on filter.id, bitshift is necessary for 11-bit id's
     Can0.setFilter(filter,filterNum);
     }
   }
@@ -46,6 +43,20 @@ void initCAN()
   Can0.begin(CAN_BAUDRATE);  
   canFilter(); //set up filters
 }
+
+
+void initCanMessage(CAN_message_t& msg, int length) 
+{
+  msg.ext = 0;
+    
+  msg.id = dashID;                                                                 //setting id
+  msg.len = length;                                                                //setting length
+  
+  for(int i=0; i<length; i++) { 
+     msg.buf[i] = 0x00;                                                            //setting all values to zero
+  }
+}
+
 
 int writeCan(const CAN_message_t& msg)
 { 
@@ -63,7 +74,7 @@ void readCan(CAN_message_t& msg)
 void printCanToSerial(const CAN_message_t& msg, bool debug)
 {
   if(debug){
-    Serial.print(" "); //write message to serial on form: "id:length:data buf[1]: buf[2]..."
+    Serial.print(" ");                                                              //write message to serial on form: "id:length:data buf[1]: buf[2]..."
     Serial.print(msg.id, HEX);
     Serial.print(": ");
     Serial.print(msg.len);

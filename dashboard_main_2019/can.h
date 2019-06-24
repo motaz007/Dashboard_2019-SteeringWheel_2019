@@ -11,6 +11,7 @@
 #define CAN_H_
 
 /*-------------------------- CAN ID's --------------------------*/
+#define dashID 0x270
 #define swheelID 0x230
 #define someOtherID 0x230
 
@@ -18,9 +19,9 @@
 #define CAN_BAUDRATE 500000
 
 /*-------------------- Functions for CANbus --------------------*/
-void testFunk(CAN_message_t& rxMsg, CAN_message_t& txMsg);
 void canFilter();
 void initCAN();
+void initCanMessage(CAN_message_t& msg, int length);
 int writeCan(const CAN_message_t& msg);
 void readCan(CAN_message_t& msg);
 void printCanToSerial(const CAN_message_t& msg, bool debug);

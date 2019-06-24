@@ -33,16 +33,7 @@ bool debug = true;
 
 // BUTTONS
 
-<<<<<<< HEAD
 //Right
-=======
-#define PIN_LIGHT_ENABLE     24
-#define PIN_BATTERY          25
-#define PIN_PROPULTION_POWER 26
-#define PIN_BLANK            27
-#define PIN_BRAKE_ENABLED    28
-
->>>>>>> master
 #define PIN_WIPER            5
 #define PIN_HAZARD_LIGHT     6
 #define PIN_RACE_SHOW_MODE   7
@@ -125,56 +116,31 @@ void initPins() {
 
 
 
-
 /*------------------------- SETUP -------------------------*/
 void setup() {
   //clockSpeedHigh(debug);
   initSerial();
   initCAN();
   initPins();
-    txMsg.ext = 0;
-    
-  txMsg.id = 0x270;               //setting id
-  txMsg.len = 8;                  //setting length
-  txMsg.buf[0] = 0x00;            //setting values
-  txMsg.buf[1] = 0x00;
-  txMsg.buf[2] = 0x00;
-  txMsg.buf[3] = 0x00;
-  txMsg.buf[4] = 0x00;
-  txMsg.buf[5] = 0x00;
-  txMsg.buf[6] = 0x00;
-  txMsg.buf[7] = 0x00;
+  initCanMessage(txMsg, 3); 
 
-  frontlights.begin();
-  backlights.begin();
-  startUpLights(frontlights, backlights);
+  frontlights.begin(); //fix this
+  backlights.begin();  // --//--
+  startUpLights(frontlights, backlights); //change name
   
   initScreen(leftScreen, LEFTSCREEN);
   initText(leftScreen, LEFTSCREEN);
   
   delay(500);
   initScreen(rightScreen, RIGHTSCREEN);
-  initText(rightScreen, RIGHTSCREEN);
-<<<<<<< HEAD
+  initText(rightScreen, RIGHTSCREEN); //init text in init screen
 
-=======
-  
-  
->>>>>>> master
 }
 
 
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-<<<<<<< HEAD
-=======
-  rxMsg.id =0x222;
-    //Serial.println("hei");
-  Serial.println(rxMsg.id, HEX);
-  testFunk(rxMsg, txMsg);
-  Serial.println(rxMsg.id, HEX);
->>>>>>> master
 
   delay(1000);
 }
