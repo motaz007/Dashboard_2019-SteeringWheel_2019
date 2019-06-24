@@ -14,6 +14,10 @@
 
 int canID[] = {swheelID, someOtherID};
 
+void testFunk(CAN_message_t& rxMsg, CAN_message_t& txMsg) {
+  rxMsg = txMsg;
+}
+
 void canFilter() {
   int numerOfIDs = sizeof(canID)/4;
   int filterInt[numerOfIDs+1];

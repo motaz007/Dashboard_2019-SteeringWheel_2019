@@ -95,6 +95,7 @@ void initPins() {
 
 
 
+
 /*------------------------- SETUP -------------------------*/
 void setup() {
   //clockSpeedHigh(debug);
@@ -103,7 +104,7 @@ void setup() {
   initPins();
     txMsg.ext = 0;
     
-  txMsg.id = 0x270;                //setting id
+  txMsg.id = 0x270;               //setting id
   txMsg.len = 8;                  //setting length
   txMsg.buf[0] = 0x00;            //setting values
   txMsg.buf[1] = 0x00;
@@ -132,7 +133,12 @@ void setup() {
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-  
+  rxMsg.id =0x222;
+    //Serial.println("hei");
+  Serial.println(rxMsg.id, HEX);
+  testFunk(rxMsg, txMsg);
+  Serial.println(rxMsg.id, HEX);
+
   delay(1000);
 }
 
