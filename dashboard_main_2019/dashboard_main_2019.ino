@@ -64,8 +64,6 @@ uint8_t brakeVal = 0;
 uint8_t optimalCounter;
 
 
-static CAN_message_t txMsg, rxMsg;
-
 Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KHZ800);
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
@@ -129,11 +127,7 @@ void setup() {
   startUpLights(frontlights, backlights); //change name
   
   initScreen(leftScreen, LEFTSCREEN);
-  initText(leftScreen, LEFTSCREEN);
-  
-  delay(500);
   initScreen(rightScreen, RIGHTSCREEN);
-  initText(rightScreen, RIGHTSCREEN); //init text in init screen
 
 }
 

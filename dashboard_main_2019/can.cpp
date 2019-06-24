@@ -12,7 +12,7 @@
 
 #include "can.h"
 
-int canID[] = {swheelID, someOtherID};
+int canID[] = {sWheelID, motor1ID, motor2ID};                                      //message ID's we want to recieve, error if not put here
 
 void canFilter() {
   int numerOfIDs = sizeof(canID)/4;
@@ -41,7 +41,7 @@ void initCAN()
   
   Serial.println("Initializing CANbus at 500k.");
   Can0.begin(CAN_BAUDRATE);  
-  canFilter(); //set up filters
+  canFilter();                                                                      //set up filters so we only recieve usefull messages
 }
 
 
@@ -49,11 +49,11 @@ void initCanMessage(CAN_message_t& msg, int length)
 {
   msg.ext = 0;
     
-  msg.id = dashID;                                                                 //setting id
-  msg.len = length;                                                                //setting length
+  msg.id = dashID;                                                                  //setting id
+  msg.len = length;                                                                 //setting length
   
   for(int i=0; i<length; i++) { 
-     msg.buf[i] = 0x00;                                                            //setting all values to zero
+     msg.buf[i] = 0x00;                                                             //setting all values to zero
   }
 }
 
@@ -63,13 +63,25 @@ int writeCan(const CAN_message_t& msg)
   return Can0.write(msg);
 }
 
-void readCan(CAN_message_t& msg)
+void readCan()
 {
   while(Can0.available()) 
   {
-   Can0.read(msg);
+   Can0.read(rxMsg);
+  }
+  
+  switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
+    case sWheelID:
+      sWheelMsg = rxMsg;
+      break;
+    case motor1ID:
+      motor1Msg = rxMsg;
+      break;
+    case  motor2ID:
+      motor2Msg = rxMsg;
   }
 }
+  
 
 void printCanToSerial(const CAN_message_t& msg, bool debug)
 {

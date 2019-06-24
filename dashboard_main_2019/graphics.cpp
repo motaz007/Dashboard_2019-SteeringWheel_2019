@@ -38,6 +38,7 @@ void initScreen(Adafruit_SharpMem& screen, bool right) {
     screen.begin();
     screen.clearDisplay();
     drawBackground(screen, right);
+    initText(screen, right);
     screen.setRotation(ORIENTATION::LEFT);
     screen.refresh();
 }
