@@ -114,12 +114,10 @@ void setup() {
   txMsg.buf[6] = 0x00;
   txMsg.buf[7] = 0x00;
 
-  /*frontlights.begin();
+  frontlights.begin();
   backlights.begin();
-  startUpLights(frontlights, backlights);*/
-  char str1[] = "Laps";
-  char str2[] = "taken";
-
+  startUpLights(frontlights, backlights);
+  
   initScreen(leftScreen, LEFTSCREEN);
   initText(leftScreen, LEFTSCREEN);
   
@@ -127,20 +125,6 @@ void setup() {
   initScreen(rightScreen, RIGHTSCREEN);
   initText(rightScreen, RIGHTSCREEN);
   
-  drawSector(leftScreen, sector);
-  drawLapCount(leftScreen, lap, maxLap);
-  drawLapTime(leftScreen, lapTime);
-
-  drawTime(leftScreen, 2000);
-
-  drawSpeed(rightScreen, 2, 150);
-  drawGear(rightScreen, '2');
-
-  drawLightIcon(rightScreen, true);
-  
-
-  rightScreen.refresh();
-  leftScreen.refresh();
   
 }
 
@@ -148,45 +132,7 @@ void setup() {
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
-  lapTime++;
-  lap++;
-  sector++;
-  if (lap >10) {
-    lap=1;
-  } else if (sector > 5) {
-    sector = 1;
-  }
-  drawLapCount(leftScreen, lap, maxLap);
-
-  drawLapTime(leftScreen, lapTime);
-  drawTime(leftScreen, 200+lapTime);
-
-  drawSector(leftScreen, sector);
-
-  drawSpeed(rightScreen, 22+2*sector, 21+2*sector);
-
-  switch(sector) {
-    case 1:
-      drawGear(rightScreen, '1');
-      drawRaceMode(rightScreen, false);
-      break;
-    case 2:
-      drawGear(rightScreen, 'N');
-      drawRaceMode(rightScreen, true);
-      drawLightIcon(rightScreen, false);
-      break;
-    case 3:
-      drawGear(rightScreen, '2');
-      drawLightIcon(rightScreen, true);
-      break;
-  }
-
-  drawVoltageValue(rightScreen, 47.5+lap*0.1);
-  drawCurrentValue(rightScreen, 12.4+lap*1.1, 13.5+lap*1.1);
-  drawPowerConsumption(rightScreen, 5.4+lap*4.1, 5.5+lap*4.1);
-
-  rightScreen.refresh();
-  leftScreen.refresh();
+  
   delay(1000);
 }
 
