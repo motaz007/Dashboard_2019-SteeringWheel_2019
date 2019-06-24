@@ -12,3 +12,6 @@ Prototyping/feilsøking inneholder litt testkoder vi har smekket sammen og koder
 
 
 NB!!! For the screens the newest verion of adafruit sharp memory library (1.0.6) does not work. Use 1.0.5 and newest of gfx (as im writing this it is 1.5.3).
+
+
+Web page to create new fonts: http://oleddisplay.squix.ch/#/home
