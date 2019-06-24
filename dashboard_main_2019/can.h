@@ -18,6 +18,7 @@
 #define CAN_BAUDRATE 500000
 
 /*-------------------- Functions for CANbus --------------------*/
+void testFunk(CAN_message_t& rxMsg, CAN_message_t& txMsg);
 void canFilter();
 void initCAN();
 int writeCan(const CAN_message_t& msg);
