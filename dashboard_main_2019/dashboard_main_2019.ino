@@ -79,39 +79,39 @@ Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 // BUTTONS
 
 #define PIN_WIPER            5
-#define PIN_HAZARD_LIGHT     6
-#define PIN_RACE_MODE   7
+#define PIN_HAZARD           6
+#define PIN_RACE_MODE        7
 #define PIN_RESET            8
 
-#define PIN_LIGHT_ENABLE     24
+#define PIN_LIGHT_BUTTON     24
 #define PIN_BATTERY          25                                                             //not used?
 #define PIN_PROPULTION_POWER 26                                                             //not used?
 #define PIN_BLANK            27
-#define PIN_BRAKE_ENABLED    28
+#define PIN_BRAKE            28
 
 void initPins() {
 
     pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //interrupt wiper
-    attachInterrupt(digitalPinToInterrupt(PIN_WIPER),   wiper_ISR, FALLING);
+    attachInterrupt(digitalPinToInterrupt(PIN_WIPER), wiper_ISR, FALLING);
 
-    pinMode(PIN_HAZARD_LIGHT, INPUT_PULLUP);                                                //interrupt hazzard light
-    attachInterrupt(digitalPinToInterrupt(PIN_HAZARD_LIGHT), hazardButton_ISR, FALLING);
+    pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //interrupt hazzard light
+    attachInterrupt(digitalPinToInterrupt(PIN_HAZARD), hazard_ISR, FALLING);
     
     pinMode(PIN_RACE_MODE, INPUT_PULLUP);                                                   //interrupt race mode
-    attachInterrupt(digitalPinToInterrupt(PIN_RACE_MODE), raceMode_ISR(), FALLING);
+    attachInterrupt(digitalPinToInterrupt(PIN_RACE_MODE), raceMode_ISR, FALLING);
     
     pinMode(PIN_RESET, INPUT_PULLUP);                                                       //interrupt reset
-    attachInterrupt(digitalPinToInterrupt(PIN_RESET), resetButton_ISR(), FALLING);
+    attachInterrupt(digitalPinToInterrupt(PIN_RESET), reset_ISR, FALLING);
 
-    pinMode(PIN_LIGHT_ENABLE, INPUT_PULLUP);                                                //interrupt light
-    attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_ENABLE), raceShowMode_ISR, FALLING);
-
+    pinMode(PIN_LIGHT_BUTTON, INPUT_PULLUP);                                                //interrupt light
+    attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_BUTTON), lights_ISR, FALLING);
+    
     pinMode(PIN_BLANK, INPUT_PULLUP);                                                       //interrupt blank
-    attachInterrupt(digitalPinToInterrupt(PIN_BLANK), blankButton_ISR(), FALLING);
+    attachInterrupt(digitalPinToInterrupt(PIN_BLANK), blank_ISR, FALLING);
 
     
-    pinMode(PIN_BRAKE_ENABLED, INPUT_PULLUP);                                                //interrupt brake
-    attachInterrupt(digitalPinToInterrupt(PIN_BRAKE_ENABLED), brakeButtonChanged_ISR, CHANGE);
+    pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //interrupt brake
+    attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
 }
 
 
@@ -158,11 +158,111 @@ void loop() {
 
 /*----------------------- ISR FUCTIONS -----------------------*/
 
-void brakeButtonChanged_ISR() { //interrupt function for brake light
+void wiper_ISR(){
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+
+  Serial.println("wiper pressed"); //if debug
+  
+  if (interrupt_time - last_interrupt_time > 100){ //wrong?
+    int state = digitalRead(PIN_HAZARD_LIGHT);
+    if(state == LOW && windowWiperON == false){
+      windowWiperON = true;
+    }else{
+      windowWiperON = false;
+    }
+  last_interrupt_time = interrupt_time;
+  }
+}
+
+void hazard_ISR(){
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+
+  Serial.println("hazzard pressed"); //if debug
+  
+  if (interrupt_time - last_interrupt_time > 100) //not doing anything?
+     {
+      int state = digitalRead(PIN_HAZARD_LIGHT);
+      if( state == LOW && hazardLightON == false){
+        hazardLightON = true;
+      }else{
+        hazardLightON = false;
+      }
+      last_interrupt_time = interrupt_time;
+     }
+}
+
+
+void raceMode_ISR(){
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+
+  Serial.println("raceMode pressed"); //if debug
+  
+  if (interrupt_time - last_interrupt_time > 2000){
+
+    int state = digitalRead(PIN_RACE_MODE);
+    Serial.println(state);
+    if(state == HIGH && raceModeON == false){
+      raceModeON = true;
+      raceMode(frontlights, backlights);
+      
+    }else if(state == HIGH && raceModeON == true){
+      raceModeON = false;
+      startUpLights(frontlights, backlights);
+    }
+  last_interrupt_time = interrupt_time;
+  }
+}
+
+void reset_ISR(){
+    //nullstill diverse
+    Serial.println("reset pressed"); //if debug
+}
+
+
+void lights_ISR(){
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+
+  Serial.println("lights pressed"); //if debug
+  
+  if (interrupt_time - last_interrupt_time > 100){
+    int state = digitalRead(PIN_HAZARD_LIGHT);
+    if(state == LOW && lightON == false){
+      lightON = true;
+      if(raceModeON){
+        raceMode(frontlights, backlights);
+      }else{
+        startUpLights(frontlights, backlights);
+      }
+    }else{
+      turnOffStrip(frontlights, 0, NUM_FRONTLIGHTS);
+      turnOffStrip(backlights, 0, NUM_BACKLIGHTS);
+      lightON = false;
+    }
+  last_interrupt_time = interrupt_time;
+  }
+}
+
+
+void blank_ISR(){
+  Serial.println("blank aka debug pressed"); //if debug
+  
+  if (debug == true) 
+  {
+    debug = false;
+  }
+  debug = true;
+}
+
+void brake_ISR() { //interrupt function for brake light
     // this button is reversed
 
-    static unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
+
   
   if (interrupt_time - last_interrupt_time > 100)
   {
@@ -187,92 +287,6 @@ void brakeButtonChanged_ISR() { //interrupt function for brake light
     last_interrupt_time = interrupt_time;
   }
 } 
-
-void hazardButtonChanged_ISR(){
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  
-  if (interrupt_time - last_interrupt_time > 100)
-     {
-      int state = digitalRead(PIN_HAZARD_LIGHT);
-      if( state == LOW && hazardLightON == false){
-        hazardLightON = true;
-      }else{
-        hazardLightON = false;
-      }
-      last_interrupt_time = interrupt_time;
-     }
-}
-
-void blankButton_ISR(){
-  if (debug == true) 
-  {
-    debug = false;
-  }
-  debug = true;
-}
-
-void lightOnOff_ISR(){
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  
-  if (interrupt_time - last_interrupt_time > 100){
-    int state = digitalRead(PIN_HAZARD_LIGHT);
-    if(state == LOW && lightON == false){
-      lightON = true;
-      if(raceModeON){
-        raceMode(frontlights, backlights);
-      }else{
-        startUpLights(frontlights, backlights);
-      }
-    }else{
-      turnOffStrip(frontlights, 0, NUM_FRONTLIGHTS);
-      turnOffStrip(backlights, 0, NUM_BACKLIGHTS);
-      lightON = false;
-    }
-  last_interrupt_time = interrupt_time;
-  }
-}
-
-void windowWiper_ISR(){
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  
-  if (interrupt_time - last_interrupt_time > 100){
-    int state = digitalRead(PIN_HAZARD_LIGHT);
-    if(state == LOW && windowWiperON == false){
-      windowWiperON = true;
-    }else{
-      windowWiperON = false;
-    }
-  last_interrupt_time = interrupt_time;
-  }
-}
-
-void raceShowMode_ISR(){
-  static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
-  
-  if (interrupt_time - last_interrupt_time > 2000){
-
-    int state = digitalRead(PIN_HAZARD_LIGHT);
-    Serial.println(state);
-    if(state == HIGH && raceModeON == false){
-      raceModeON = true;
-      raceMode(frontlights, backlights);
-      
-    }else if(state == HIGH && raceModeON == true){
-      raceModeON = false;
-      startUpLights(frontlights, backlights);
-    }
-  last_interrupt_time = interrupt_time;
-  }
-}
-
-void reset_ISR(){
-  
-}
-
 
 /*---------------- OTHER FUNCTIONS ---------------------*/
 
