@@ -7,6 +7,7 @@
 #define GRAPHICS_H_
 
 #include "helpers.h"
+#include "can.h"
 
 #include <Adafruit_SharpMem_edited.h>
 #include <Adafruit_GFX.h>
@@ -31,7 +32,6 @@
 #include "fonts/Open_Sans_Bold_12.h"
 #include "fonts/Open_Sans_Bold_10.h"
 
-
 //REGULAR
 #include "fonts/Open_Sans_Regular_60.h"
 #include "fonts/Open_Sans_Regular_36.h"
@@ -39,7 +39,6 @@
 #include "fonts/Open_Sans_Regular_18.h"
 #include "fonts/Open_Sans_Regular_12.h"
 #include "fonts/Open_Sans_Regular_10.h"
-
 
 enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 
@@ -52,7 +51,7 @@ enum ORIENTATION { UP = 0, LEFT = 1, DOWN = 2, RIGHT = 3 };
 #define LEFTSCREEN false
 #define RIGHTSCREEN true
 
-
+#define maxLaps 10
 
 /*----------- SCREEN VARIABLES ----------- */
 
@@ -97,15 +96,18 @@ const uint8_t timeHorizontal = 105;
 
 void drawBackground(Adafruit_SharpMem& screen, bool right=true);                                          // Draws the background bitmap defined in a .h file.
 void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);
-void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size=1);               //denne trengs!!
 
 //INIT FUNCTIONS
 
 void initScreen(Adafruit_SharpMem& screen, bool right);
+void initScreenContent(Adafruit_SharpMem& screen, bool right);
 void initText(Adafruit_SharpMem& screen, bool right);
 
+//UPDATE FUNCTIONS
+void updateScreen(Adafruit_SharpMem& screen, bool right);
+
 //DRAW FUNCTIONS FOR LEFT SCREEN
-void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, const uint8_t& maxLaps);
+void drawLapCount(Adafruit_SharpMem& screen, const uint8_t& lapCount);
 void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds);
 void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds);
 void drawRectangle(Adafruit_SharpMem& screen);
@@ -117,7 +119,7 @@ void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float&
 void drawGear(Adafruit_SharpMem& screen, const char gear);
 void drawCirkle(Adafruit_SharpMem& screen, const uint8_t x, const uint8_t y, const uint8_t r);
 void drawLightIcon(Adafruit_SharpMem& screen, bool on);
-void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal);
+void drawVoltageValue(Adafruit_SharpMem& screen, const double& motor1voltage, const double& motor2voltage);
 void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current);
 void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, const double& motor2power);
 void drawRaceMode(Adafruit_SharpMem& screen, bool on);

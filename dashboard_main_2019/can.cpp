@@ -71,6 +71,9 @@ void readCan()
   }
   
   switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
+    case clutchID:
+      clutchMsg = rxMsg;
+      break;
     case sWheelID:
       sWheelMsg = rxMsg;
       break;
@@ -79,6 +82,7 @@ void readCan()
       break;
     case motor2ID:
       motor2Msg = rxMsg;
+      break;
   }
 }
 

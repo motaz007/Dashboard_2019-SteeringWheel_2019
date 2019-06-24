@@ -22,16 +22,6 @@ void drawString(Adafruit_SharpMem& screen, const char * str, int x, int y, int s
   
 }
 
-void drawStringLong(Adafruit_SharpMem& screen, const char * str, int x, int y, int size) {               //fix this
-    screen.setCursor(x, y);
-    screen.setTextSize(size);
-
-    for (unsigned int i = 0; i < sizeof(str)/sizeof(str[0]) + 1; ++i) {
-        screen.write(str[i]);  // `.write` moves cursor for every character
-    }
-  
-}
-
 //INIT FUNCTIONS
 
 void initScreen(Adafruit_SharpMem& screen, bool right) {
@@ -39,8 +29,29 @@ void initScreen(Adafruit_SharpMem& screen, bool right) {
     screen.clearDisplay();
     drawBackground(screen, right);
     initText(screen, right);
+    initScreenContent(screen, right);
     screen.setRotation(ORIENTATION::LEFT);
     screen.refresh();
+}
+
+void initScreenContent(Adafruit_SharpMem& screen, bool right)
+{
+ if(!right)
+ {
+   drawSpeed(screen, 0, 0);                                                                          //always starting up at a stand still
+   drawGear(screen, 'N');                                                                            //always starting up in neutral
+   drawLightIcon(screen, true);                                                                      //always starting up with lights
+   drawVoltageValue(screen, 0, 0);                                                                   //init everything as zero
+   drawCurrentValue(screen, 0, 0);
+   drawPowerConsumption(screen, 0, 0);                                                                   
+   drawRaceMode(screen, true);                                                                       //always starting up in race mode
+ } else if (right) 
+ {
+   drawLapCount(screen, 1);
+   drawLapTime(screen, 0);                                                                              
+   drawTime(screen, 0);
+   drawSector(screen, 1);                                                                            //starting up in sector 1
+ }
 }
 
 void initText(Adafruit_SharpMem& screen, bool right) {
@@ -59,7 +70,7 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     
     screen.setFont(&Open_Sans_Regular_12);
     drawString(screen, "Sector",  47, 270, 1);
-    screen.write('r'); //må fikses så man kan ha lengre strenger
+    screen.write('r');                                                                                //må fikses så man kan ha lengre strenger
 
 
     drawString(screen, "Time",  142, 270, 1);
@@ -88,19 +99,45 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     
 }
 
+//INIT FUNCTIONS
 
+void updateScreen(Adafruit_SharpMem& screen, bool right)
+{
+ if(!right)
+ {
+   drawSpeed(screen, motor1Msg.buf[6]/5, motor2Msg.buf[6]/5);                                        //speed is sent from motor controllers at position 7
+                                                                                                     //it is sent as km/h * 5 to utilize the measuring range
+                                                                                                        
+   drawGear(screen, clutchMsg.buf[3]);                                                               //clutch status aka gear is sent as 0=neutral, 1=first, 2=secound
+   //drawLightIcon(screen, lightON);                                                                 //variable defined in main
+   drawVoltageValue(screen, (motor1Msg.buf[2]<<8 + motor1Msg.buf[3])/10,                             //voltage uses two positions in motor controller can message
+                            (motor2Msg.buf[2]<<8 + motor2Msg.buf[3])/10);                            //first position needs 8 bitshifts, and that value i batt V *10
+   
+   drawCurrentValue(screen, motor1Msg.buf[1]/10, motor2Msg.buf[2]/10);                               //curent is sent at posison 1 and is motor current A * 10
+   drawPowerConsumption(screen, (motor1Msg.buf[4]<<8 + motor1Msg.buf[5])/10,                         //identical as voltage, just position 5 and 6
+                                (motor2Msg.buf[4]<<8 + motor2Msg.buf[5])/10);                        //first position needs 8 bitshifts, and that value i used energy *10;                                                                   
+   //drawRaceMode(screen, raceModeON);                                                               //variable defined in main
+ 
+ } else if (right) 
+ {
+   drawLapCount(screen, 2);
+   drawLapTime(screen, 1);                                                                              
+   drawTime(screen, 1000);
+   drawSector(screen, sWheelMsg.buf[7]);                                                             //sent at last position of steering wheel
+ }
+}
 
 //DRAW FUNCTIONS FOR LEFT SCREEN
 
-void drawLapCount(Adafruit_SharpMem& screen, volatile const uint8_t& lapCount, const uint8_t& maxLaps) 
+void drawLapCount(Adafruit_SharpMem& screen, const uint8_t& lapCount) 
 {
-    screen.setFont(&Open_Sans_Bold_60);                                                                  //setting correct font and size
+    screen.setFont(&Open_Sans_Bold_60);                                                              //setting correct font and size
     screen.setTextColor(BLACK);                                                               
-    screen.fillRect(30, yMarginSpeedLapCount-fontHeight60, 170, fontHeight60+1, WHITE);                  //erase previous text
+    screen.fillRect(30, yMarginSpeedLapCount-fontHeight60, 170, fontHeight60+1, WHITE);              //erase previous text
     
     char str[16];
     sprintf(str, "%02u/%02u", lapCount, maxLaps); //formating string
-    drawString(screen, str, lapCountHorizontalMargin, yMarginSpeedLapCount, 1);                          //printing new text
+    drawString(screen, str, lapCountHorizontalMargin, yMarginSpeedLapCount, 1);                      //printing new text
 }
 
 void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds) {
@@ -217,12 +254,12 @@ void drawLightIcon(Adafruit_SharpMem& screen, bool on) {
     }
     
 }
-    
 
-void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal) {
-
+void drawVoltageValue(Adafruit_SharpMem& screen, const double& motor1voltage, const double& motor2voltage)
+{
+    double voltage = (motor1voltage + motor2voltage)/2;
     char str[16];
-    sprintf(str, "%-4.2f", voltageVal);
+    sprintf(str, "%-4.2f", voltage);
 
     screen.fillRect(145, 186, 50, fontHeight18, BLACK);
     screen.setFont(&Open_Sans_Bold_18);
@@ -230,7 +267,8 @@ void drawVoltageValue(Adafruit_SharpMem& screen, const double& voltageVal) {
     drawString(screen, str, 145, 200, 1);
 }
 
-void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current) {
+void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, const double& motor2current) 
+{
     double current = (motor1current + motor2current)/2;
 
     char str[16] = {0};
@@ -242,7 +280,8 @@ void drawCurrentValue(Adafruit_SharpMem& screen, const double& motor1current, co
     drawString(screen, str, 145, 245, 1);
 }
 
-void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, const double& motor2power) {
+void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, const double& motor2power) 
+{
     double current = (motor1power + motor2power)/2;
 
     char str[16] = {0};
@@ -254,7 +293,8 @@ void drawPowerConsumption(Adafruit_SharpMem& screen, const double& motor1power, 
     drawString(screen, str, 145, 290, 1);
 }
 
-void drawRaceMode(Adafruit_SharpMem& screen, bool on) {
+void drawRaceMode(Adafruit_SharpMem& screen, bool on) 
+{
     screen.fillRect(8, 303, 7, 7, BLACK);
     if(on) {
       screen.setFont(&Open_Sans_Bold_10);

@@ -38,8 +38,8 @@ bool debug = true;
 #define PIN_RESET            8
 
 #define PIN_LIGHT_BUTTON     24
-#define PIN_BATTERY          25                                                             //not used?
-#define PIN_PROPULTION_POWER 26                                                             //not used?
+#define PIN_BATTERY          25                                                             //not used
+#define PIN_PROPULTION_POWER 26                                                             //not used
 #define PIN_BLANK            27
 #define PIN_BRAKE            28
 
@@ -97,8 +97,6 @@ void initPins() {
     }
 }
 
-
-
 /*------------------------- SETUP -------------------------*/
 void setup() {
   //clockSpeedHigh(debug);
@@ -113,7 +111,7 @@ void setup() {
   initScreen(leftScreen, LEFTSCREEN);
   initScreen(rightScreen, RIGHTSCREEN);
 
-  initPins();                                                                                //initPins needs to be last to avoid malfunction
+  initPins();                                                                                //initPins needs to be last to avoid malfunction, not sure what goes wrong
 }
 
 
@@ -132,11 +130,11 @@ void wiper_ISR(){
 
   Serial.println("wiper pressed"); //if debug
   
-  if (interrupt_time - last_interrupt_time > 100){ //wrong?
+  if (interrupt_time - last_interrupt_time > 100){
     int state = digitalRead(PIN_HAZARD);
-    if(state == LOW && windowWiperON == false){
+    if(state == LOW && windowWiperON == false) {
       windowWiperON = true;
-    }else{
+    } else {
       windowWiperON = false;
     }
   last_interrupt_time = interrupt_time;
@@ -149,7 +147,7 @@ void hazard_ISR(){
 
   Serial.println("hazzard pressed"); //if debug
   
-  if (interrupt_time - last_interrupt_time > 100) //not doing anything?
+  if (interrupt_time - last_interrupt_time > 100)
      {
       int state = digitalRead(PIN_HAZARD);
       if( state == LOW && hazardLightON == false){
