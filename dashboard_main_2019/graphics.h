@@ -66,7 +66,7 @@ const uint8_t textVerticalMargin = 12;                                          
 
 //VERITCAL MARGINS
 
-const uint8_t speedThreshold = 10;                                                      //move to global? or argument?  
+const uint8_t speedThreshold = 10;                                                           //move to global? or argument?  
 const uint8_t yMarginSpeedLapCount = 100;                                                    //margin to bottom line of lap count and speed
 
 //Lap Count
