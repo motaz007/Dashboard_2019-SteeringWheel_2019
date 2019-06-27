@@ -78,10 +78,7 @@ void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
       motor2Msg = rxMsg;
       break;
    }
-   
   }
-  
-  
 }
 
 void printCanToSerial(const CAN_message_t& msg, bool debug)

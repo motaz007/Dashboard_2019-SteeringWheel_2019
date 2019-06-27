@@ -248,38 +248,38 @@ void blank_ISR()                                                                
     } else
       debug = true;
     }
-    last_interrupt_time = interrupt_time;                                                 //updating time of last interrupt
+    last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
     if (debug) {
-      Serial.println("blank pressed");                                                    //should be printed nicely for informative debug, this works for now
+      Serial.println("blank pressed");                                                     //should be printed nicely for informative debug, this works for now
     }
   }
 }
 
 void brake_ISR() 
-{                                                                                        //Interrupt fuction for brake light
+{                                                                                          //Interrupt fuction for brake light
   static unsigned long last_interrupt_time;
-  unsigned long interrupt_time = millis();                                               //storing time of last interrupt
+  unsigned long interrupt_time = millis();                                                 //storing time of last interrupt
 
   if (interrupt_time - last_interrupt_time > 200) {
     int state = digitalRead(PIN_BRAKE);
-    if (state == HIGH) {                                                                 //testing if it should turn brake lights off   
+    if (state == HIGH && regenBrakeON == false) {                                          //testing if it should turn brake lights off   
         brakeON = false;
         brakeLights(backlights, brakeON);
         txMsg.buf[0] = 0x01;
         
         if (debug) {
-          Serial.println("  NOT BRAKING  ");                                             //should be printed nicely for informative debug, this works for now
+          Serial.println("  NOT BRAKING  ");                                               //should be printed nicely for informative debug, this works for now
         }
-    } else if(state == LOW) {                                                            //testing if it should turn brake lights on
+    } else if(state == LOW) {                                                              //testing if it should turn brake lights on
         brakeON = true;
         brakeLights(backlights, brakeON);
         txMsg.buf[0] = 0x00;
         
         if (debug) {
-          Serial.println("  BRAKING  ");                                                 //should be printed nicely for informative debug, this works for now
+          Serial.println("  BRAKING  ");                                                   //should be printed nicely for informative debug, this works for now
         }
     }
-    last_interrupt_time = interrupt_time;                                                //updating time of last interrupt
+    last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
   }
 } 
 
@@ -288,34 +288,34 @@ void brake_ISR()
 void sWheelCan()
 {
     brakeVal = sWheelMsg.buf[2];
-    if (brakeVal > 0 && regenBrakeON == false) {  // BRAKELIGHTS
+    if (brakeVal > 0 && regenBrakeON == false) {                                           // BRAKELIGHTS
       brakeLights(backlights, BRIGHTNESS_BACK_BRAKE);
       regenBrakeON = true;
     }else if(brakeVal == 0 && regenBrakeON == true && brakeON == false){
       brakeLights(backlights, BRIGHTNESS_BACK);
       regenBrakeON = false;
     }
-    if (bitRead(sWheelMsg.buf[1],1)) { // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
+    if (bitRead(sWheelMsg.buf[1],1)) {                                                     // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
       blinkLights(frontlights, backlights, true, raceModeON);
     }
-    if (bitRead(sWheelMsg.buf[1],2)) { // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
+    if (bitRead(sWheelMsg.buf[1],2)) {                                                     // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
       blinkLights(frontlights, backlights, false, raceModeON);
     }
-    if(bitRead(sWheelMsg.buf[1],3)){ //CC-button, counter for optimal acceleration
+    if(bitRead(sWheelMsg.buf[1],3)){                                                       //CC-button, counter for optimal acceleration
     }
-    if (bitRead(sWheelMsg.buf[1],4)) { //OptimalCurrent
+    if (bitRead(sWheelMsg.buf[1],4)) {                                                     //OptimalCurrent
       
     }
-    if (bitRead(sWheelMsg.buf[1],5)) { //Lap
+    if (bitRead(sWheelMsg.buf[1],5)) {                                                     //Lap
       
     }
 
-    if(bitRead(sWheelMsg.buf[1],6)){ // Horn
+    if(bitRead(sWheelMsg.buf[1],6)){                                                       // Horn
       digitalWrite(PIN_HORN, HIGH);
     }else{
       digitalWrite(PIN_HORN, LOW);
     }
-    if (bitRead(sWheelMsg.buf[1],7)) { //OptimalBrake
+    if (bitRead(sWheelMsg.buf[1],7)) {                                                     //OptimalBrake
       
     }
 }
