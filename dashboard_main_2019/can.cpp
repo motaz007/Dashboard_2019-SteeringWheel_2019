@@ -4,15 +4,10 @@
  * CAN at 500k 
  */
 
-/*----------CAN-cable-----------------*/
-// Yellow = 12V
-// Green - CANH
-// Red - CANL
-// Black - GND
 
 #include "can.h"
 
-int canID[] = {clutchID, sWheelID, motor1ID, motor2ID};                                      //message ID's we want to recieve, error if not put here
+int canID[] = {clutchID, sWheelID, motor1ID, motor2ID};                            //message ID's we want to recieve, error if not put here
 
 void canFilter() {
   int numerOfIDs = sizeof(canID)/4;
@@ -68,14 +63,8 @@ void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
   while(Can0.available()) 
   {
    Can0.read(rxMsg);     //saves new can-message to rxMsg
-   rxMsg.id=0x230;
-   rxMsg.buf[7]=0x03;
-<<<<<<< HEAD
    
    switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
-=======
-     switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
->>>>>>> 4b7a2bd651859a93386bbdae6400632981a6beb6
     case clutchID:
       clutchMsg = rxMsg;
       break;
