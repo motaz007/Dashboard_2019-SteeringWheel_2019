@@ -70,7 +70,12 @@ void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
    Can0.read(rxMsg);     //saves new can-message to rxMsg
    rxMsg.id=0x230;
    rxMsg.buf[7]=0x03;
+<<<<<<< HEAD
+   
+   switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
+=======
      switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
+>>>>>>> 4b7a2bd651859a93386bbdae6400632981a6beb6
     case clutchID:
       clutchMsg = rxMsg;
       break;

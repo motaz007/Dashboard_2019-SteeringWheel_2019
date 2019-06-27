@@ -43,7 +43,11 @@ bool debug = true;
   #define PIN_BLANK            27
   #define PIN_BRAKE            28
 
+<<<<<<< HEAD
+#define PIN_JENS_1 15                                                                       //nye navn ofc
+=======
 #define PIN_HORN 15
+>>>>>>> 4b7a2bd651859a93386bbdae6400632981a6beb6
 #define PIN_JENS_2 16
 
 // LED's on PCB for CAN
@@ -284,38 +288,59 @@ void brake_ISR() { //interrupt function for brake light
 
 /*---------------- OTHER FUNCTIONS ---------------------*/
 
-void sWheelCan(){
-    //printCanToSerial(sWheelMsg, true);
+void sWheelCan()
+{
     brakeVal = sWheelMsg.buf[2];
-    if(brakeVal > 0 && regenBrakeON == false){  // BRAKELIGHTS
+    if (brakeVal > 0 && regenBrakeON == false) {  // BRAKELIGHTS
       brakeLights(backlights, BRIGHTNESS_BACK_BRAKE);
       regenBrakeON = true;
+<<<<<<< HEAD
+    } else if (brakeVal == 0 && regenBrakeON == true) {
+=======
     }else if(brakeVal == 0 && regenBrakeON == true && brakeON == false){
+>>>>>>> 4b7a2bd651859a93386bbdae6400632981a6beb6
       brakeLights(backlights, BRIGHTNESS_BACK);
       regenBrakeON = false;
     }
-    if(bitRead(sWheelMsg.buf[1],1)){ // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
+    if (bitRead(sWheelMsg.buf[1],1)) { // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
       blinkLights(frontlights, backlights, true, raceModeON);
     }
-    if(bitRead(sWheelMsg.buf[1],2)){ // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
+    if (bitRead(sWheelMsg.buf[1],2)) { // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
       blinkLights(frontlights, backlights, false, raceModeON);
     }
+<<<<<<< HEAD
+    if (bitRead(sWheelMsg.buf[1],3)) { //CC-button, counter for optimal acceleration
+     // static unsigned long last_interrupt_time = 0;
+      unsigned long interrupt_time = millis();
+      if (interrupt_time - last_interrupt_time > 200){
+        optimalCounter++;
+        if(optimalCounter > OPTIMALCOUNTER_MAX){
+          optimalCounter = 0;
+        }
+        last_interrupt_time = interrupt_time;
+      }
+=======
     if(bitRead(sWheelMsg.buf[1],3)){ //CC-button, counter for optimal acceleration
       
+>>>>>>> 4b7a2bd651859a93386bbdae6400632981a6beb6
     }
-    if(bitRead(sWheelMsg.buf[1],4)){ //OptimalCurrent
+    if (bitRead(sWheelMsg.buf[1],4)) { //OptimalCurrent
       
     }
-    if(bitRead(sWheelMsg.buf[1],5)){ //Lap
+    if (bitRead(sWheelMsg.buf[1],5)) { //Lap
       
     }
+<<<<<<< HEAD
+    if (bitRead(sWheelMsg.buf[1],6)) { // Horn
+      // HORN ON
+=======
     if(bitRead(sWheelMsg.buf[1],6)){ // Horn
       digitalRead(PIN_HORN, HIGH);
     }else{
       digitalRead(PIN_HORN, LOW);
+>>>>>>> 4b7a2bd651859a93386bbdae6400632981a6beb6
     }
-    if(bitRead(sWheelMsg.buf[1],7)){ //OptimalBrake
+    if (bitRead(sWheelMsg.buf[1],7)) { //OptimalBrake
       
     }
-  
 }
