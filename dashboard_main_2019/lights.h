@@ -15,6 +15,7 @@
 // white << 24 | red << 16 | green << 8 | blue   << 0
 #define COLOR_BACKLIGHTS  16711680  // WRGB = 0,255,0,0
 #define COLOR_FRONTLIGHTS 4278190080 // WRGB = 255,0,0,0
+//#define COLOR_FRONTLIGHTS 16724736UL // WRGB = 255,0,0,0
 #define COLOR_BLINKLIGHTS 16737280  // WRGB = 0,255,80,0
 #define COLOR_SWHEELLIGHTS 990975   
 #define COLOR_ERROR 16724736UL  // WRGB = 0,255,51,0
@@ -59,6 +60,7 @@ void swheelError(Adafruit_NeoPixel& sWheelLights);
 void swheelOK(Adafruit_NeoPixel& sWheelLights);
 
 //DASH
+void initLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights);
 void showLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights);
 void blinkLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights, bool left, bool raceModeON); // Enable blinkers in the back
 void brakeLights(Adafruit_NeoPixel& backLights, bool brakeON);

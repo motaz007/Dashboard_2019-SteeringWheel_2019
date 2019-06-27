@@ -26,13 +26,12 @@ static CAN_message_t txMsg,                                         //output
                      motor2Msg,                                     //motor 2
                      clutchMsg;                                     //actuator board, used for gear. Only using one as these should be koordinated 
                                                                     //(if not it's probably better if the driver doesn't get that info...)
-
 /*-------------------- Functions for CANbus --------------------*/
 void canFilter();
 void initCAN();
 void initCanMessage(CAN_message_t& msg, int length);
 int writeCan(const CAN_message_t& msg);
-void readCan(CAN_message_t& msg);
+void readCan(CAN_message_t& rxMsg, CAN_message_t& msg);
 void printCanToSerial(const CAN_message_t& msg, bool debug);
 
 #endif

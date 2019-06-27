@@ -58,12 +58,21 @@ void swheelOK(Adafruit_NeoPixel& shweelLights) {
 }
 
 /*-------------------------- DASH FUNCTIONS -------------------------*/
+void initLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights)
+{
+ frontLights.begin();
+ backLights.begin();
+ frontLights.setBrightness(BRIGHTNESS_FRONT);
+ backLights.setBrightness(BRIGHTNESS_BACK);
+}
+
 void showLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights){
   turnOffStrip(frontLights, 0, NUM_FRONTLIGHTS);
   turnOffStrip(backLights, 0, NUM_BACKLIGHTS);
 
   //BACKLIGHTS
-  
+  backLights.setBrightness(BRIGHTNESS_BACK);
+  frontLights.setBrightness(BRIGHTNESS_FRONT);
   for (int i = 288; i > 255; i--){
       backLights.setPixelColor(i, COLOR_BACKLIGHTS);
       backLights.show();
@@ -172,18 +181,17 @@ void blinkLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights, 
     }
     delay(200);
   } 
-  
-    
-  }
   for (int i = 1; i < NUM_BLINK; i++) {
       if(raceModeON){
         frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_OFF);
         backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_OFF);                                          // SET COLOR BACK TO ORIGINAL COLOR
-      }else{
+      } else {
         frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_FRONTLIGHTS);
         backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_BACKLIGHTS);
       
     }
+  }
+  
   frontLights.show();
   backLights.show();
 }
@@ -230,7 +238,7 @@ void raceLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights) {
       frontLights.setPixelColor(i, COLOR_FRONTLIGHTS);
   }
   for(int i = RACE_LEFT_START_BACKLIGHTS; i < RACE_LEFT_END_BACKLIGHTS; i++){
-      backLights.setPixelColor(RACE_LEFT_START_BACKLIGHTS + i, COLOR_BACKLIGHTS);
+      backLights.setPixelColor(RACE_LEFT_START_BACKLIGHTS - i, COLOR_BACKLIGHTS);
       backLights.setPixelColor(RACE_RIGHT_END_BACKLIGHTS - i, COLOR_BACKLIGHTS);
   }
   frontLights.show();

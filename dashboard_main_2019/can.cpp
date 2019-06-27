@@ -12,7 +12,7 @@
 
 #include "can.h"
 
-int canID[] = {sWheelID, motor1ID, motor2ID};                                      //message ID's we want to recieve, error if not put here
+int canID[] = {clutchID, sWheelID, motor1ID, motor2ID};                                      //message ID's we want to recieve, error if not put here
 
 void canFilter() {
   int numerOfIDs = sizeof(canID)/4;
@@ -63,19 +63,27 @@ int writeCan(const CAN_message_t& msg)
   return Can0.write(msg);
 }
 
-void readCan()
+void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
 {
+  sWheelMsg.id=0x230;
+  sWheelMsg.len=8;
+  sWheelMsg.buf[7]=0x03;
+
+  msg.id=0x230;
+  msg.len=8;
+  msg.buf[7]=0x03;
+  
   while(Can0.available()) 
   {
-   Can0.read(rxMsg);                                                                //saves new can-message to rxMsg
-  }
-  
-  switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
+   Can0.read(rxMsg);     //saves new can-message to rxMsg
+   rxMsg.id=0x230;
+   rxMsg.buf[7]=0x03;
+     switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
     case clutchID:
       clutchMsg = rxMsg;
       break;
     case sWheelID:
-      sWheelMsg = rxMsg;
+      msg = rxMsg;
       break;
     case motor1ID:
       motor1Msg = rxMsg;
@@ -83,7 +91,11 @@ void readCan()
     case motor2ID:
       motor2Msg = rxMsg;
       break;
+   }
+   
   }
+  
+  
 }
 
 void printCanToSerial(const CAN_message_t& msg, bool debug)

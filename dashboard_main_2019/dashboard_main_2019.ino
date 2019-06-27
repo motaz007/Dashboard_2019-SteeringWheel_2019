@@ -31,18 +31,20 @@ bool debug = true;
 #define PIN_FRONTLIGHT   36
 
 
-// BUTTONS
-#define PIN_WIPER            5
-#define PIN_HAZARD           6
-#define PIN_RACE_MODE        7
-#define PIN_RESET            8
+  // BUTTONS
+  #define PIN_WIPER            5
+  #define PIN_HAZARD           6
+  #define PIN_RACE_MODE        7
+  #define PIN_RESET            8
+  
+  #define PIN_LIGHT_BUTTON     24
+  #define PIN_BATTERY          25                                                             //not used
+  #define PIN_PROPULTION_POWER 26                                                             //not used
+  #define PIN_BLANK            27
+  #define PIN_BRAKE            28
 
-#define PIN_LIGHT_BUTTON     24
-#define PIN_BATTERY          25                                                             //not used
-#define PIN_PROPULTION_POWER 26                                                             //not used
-#define PIN_BLANK            27
-#define PIN_BRAKE            28
-
+#define PIN_JENS_1 15
+#define PIN_JENS_2 16
 
 // LED's on PCB for CAN
 #define PIN_CAN_RX_LED 23
@@ -61,6 +63,7 @@ uint8_t brakeVal = 0;
 uint8_t optimalCounter;
 
 
+
 Adafruit_NeoPixel frontlights(NUM_FRONTLIGHTS, PIN_FRONTLIGHT, NEO_GRBW + NEO_KHZ800);
 Adafruit_NeoPixel backlights(NUM_BACKLIGHTS, PIN_BACKLIGHT, NEO_GRBW + NEO_KHZ800);
 
@@ -73,25 +76,25 @@ void initPins() {
 
     pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //init wiper with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_WIPER), wiper_ISR, FALLING);
-
+    delay(50);
     pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //init hazzard light with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_HAZARD), hazard_ISR, FALLING);
-    
+    delay(50);
     pinMode(PIN_RACE_MODE, INPUT_PULLUP);                                                   //init race mode with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_RACE_MODE), raceMode_ISR, FALLING);
-    
+    delay(50);
     pinMode(PIN_RESET, INPUT_PULLUP);                                                       //ini reset button with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_RESET), reset_ISR, FALLING);
-
+delay(50);
     pinMode(PIN_LIGHT_BUTTON, INPUT_PULLUP);                                                //init light button with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_BUTTON), lights_ISR, FALLING);
-    
+    delay(50);
     pinMode(PIN_BLANK, INPUT_PULLUP);                                                       //init blank button with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_BLANK), blank_ISR, FALLING);
-
+    delay(50);
     pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //init brake pedal sensor (button) with interrupt
     attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
-
+    delay(50);
     if(debug) {
       Serial.println("all buttons initialized with interrupt");
     }
@@ -106,31 +109,38 @@ void setup() {
 
   frontlights.begin(); //fix this
   backlights.begin();  // --//--
-  startUpLights(frontlights, backlights); //change name?
+  showLights(frontlights, backlights);
   
   initScreen(leftScreen, LEFTSCREEN);
   initScreen(rightScreen, RIGHTSCREEN);
 
-  initPins();                                                                                //initPins needs to be last to avoid malfunction, not sure what goes wrong
+  initPins();                                                                               //initPins needs to be last to avoid malfunction, not sure what goes wrong
 }
 
 
 /*----------------------- MAIN LOOP -----------------------*/
 
 void loop() {
+  
+  readCan(rxMsg, sWheelMsg);
   updateScreen(leftScreen, LEFTSCREEN);
   updateScreen(rightScreen, RIGHTSCREEN);
+  sWheelCan();
+  //printCanToSerial(sWheelMsg, true);
+  delay(100);
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/
 
 void wiper_ISR(){
-  static unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();
 
-  Serial.println("wiper pressed"); //if debug
-  
-  if (interrupt_time - last_interrupt_time > 100){
+  delay(50);
+  if (interrupt_time - last_interrupt_time > 500){
+    delay(50);
+    
+    Serial.println("wiper pressed"); //if debug
     int state = digitalRead(PIN_HAZARD);
     if(state == LOW && windowWiperON == false) {
       windowWiperON = true;
@@ -142,13 +152,13 @@ void wiper_ISR(){
 }
 
 void hazard_ISR(){
-  static unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();
 
-  Serial.println("hazzard pressed"); //if debug
-  
-  if (interrupt_time - last_interrupt_time > 100)
-     {
+  delay(50);
+  if (interrupt_time - last_interrupt_time > 500){
+    delay(50);
+      Serial.println("hazzard pressed"); //if debug
       int state = digitalRead(PIN_HAZARD);
       if( state == LOW && hazardLightON == false){
         hazardLightON = true;
@@ -161,47 +171,57 @@ void hazard_ISR(){
 
 
 void raceMode_ISR(){
-  static unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();
 
-  Serial.println("raceMode pressed"); //if debug
-  
-  if (interrupt_time - last_interrupt_time > 2000){
-
+    delay(50);
+  if (interrupt_time - last_interrupt_time > 500){
+    delay(50);
+    
+    Serial.println("raceMode pressed"); //if debug
     int state = digitalRead(PIN_RACE_MODE);
-    Serial.println(state);
+    //Serial.println(state);
     if(state == HIGH && raceModeON == false){
       raceModeON = true;
-      raceMode(frontlights, backlights);
+      raceLights(frontlights, backlights);
       
     }else if(state == HIGH && raceModeON == true){
       raceModeON = false;
-      startUpLights(frontlights, backlights);
+      showLights(frontlights, backlights);
     }
   last_interrupt_time = interrupt_time;
   }
 }
 
 void reset_ISR(){
+  static unsigned long last_interrupt_time;
+      unsigned long interrupt_time = millis();
+     delay(50);
+  if (interrupt_time - last_interrupt_time > 500){
+    delay(15);
     //nullstill diverse
     Serial.println("reset pressed"); //if debug
+    }
+  last_interrupt_time = interrupt_time;
 }
 
 
 void lights_ISR(){
-  static unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();
 
-  Serial.println("lights pressed"); //if debug
-  
-  if (interrupt_time - last_interrupt_time > 100){
+ 
+    delay(50);
+  if (interrupt_time - last_interrupt_time > 500){
+    delay(50); 
+    Serial.println("lights pressed"); //if debug
     int state = digitalRead(PIN_HAZARD);
     if(state == LOW && lightON == false){
       lightON = true;
       if(raceModeON){
-        raceMode(frontlights, backlights);
+        raceLights(frontlights, backlights);
       }else{
-        startUpLights(frontlights, backlights);
+        showLights(frontlights, backlights);
       }
     }else{
       turnOffStrip(frontlights, 0, NUM_FRONTLIGHTS);
@@ -214,6 +234,11 @@ void lights_ISR(){
 
 
 void blank_ISR(){
+  static unsigned long last_interrupt_time;
+  unsigned long interrupt_time = millis();
+    delay(50);
+  if (interrupt_time - last_interrupt_time > 500){
+    delay(50);
   Serial.println("blank aka debug pressed"); //if debug
   
   if (debug == true) 
@@ -221,18 +246,19 @@ void blank_ISR(){
     debug = false;
   }
   debug = true;
+      }
+  last_interrupt_time = interrupt_time;
 }
 
 void brake_ISR() { //interrupt function for brake light
     // this button is reversed (physically, normally open)
 
-  static unsigned long last_interrupt_time = 0;
+  static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();
 
-  
-  if (interrupt_time - last_interrupt_time > 100)
-  {
-    delay(10);
+    delay(50);
+  if (interrupt_time - last_interrupt_time > 200){
+    delay(50);
     int state = digitalRead(PIN_BRAKE);
 
     if (state == HIGH) {  // RISING -- is unpressed
@@ -257,8 +283,8 @@ void brake_ISR() { //interrupt function for brake light
 /*---------------- OTHER FUNCTIONS ---------------------*/
 
 void sWheelCan(){
-  if (rxMsg.id == 0x230){ 
-    brakeVal = rxMsg.buf[2];
+    //printCanToSerial(sWheelMsg, true);
+    brakeVal = sWheelMsg.buf[2];
     if(brakeVal > 0 && regenBrakeON == false){  // BRAKELIGHTS
       brakeLights(backlights, BRIGHTNESS_BACK_BRAKE);
       regenBrakeON = true;
@@ -266,14 +292,15 @@ void sWheelCan(){
       brakeLights(backlights, BRIGHTNESS_BACK);
       regenBrakeON = false;
     }
-    if(bitRead(rxMsg.buf[1],1)){ // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
+    if(bitRead(sWheelMsg.buf[1],1)){ // LEFT BLINK //bitRead(rxMsg.buf[1],1) rxMsg.buf[1] &= (1<<1)
       blinkLights(frontlights, backlights, true, raceModeON);
     }
-    if(bitRead(rxMsg.buf[1],2)){ // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
+    if(bitRead(sWheelMsg.buf[1],2)){ // RIGHT BLINK  //bitRead(rxMsg.buf[1],2) rxMsg.buf[1] &= (1<<2)
       blinkLights(frontlights, backlights, false, raceModeON);
+      Serial.println("hello world, i'm alive");
     }
-    if(bitRead(rxMsg.buf[1],3)){ //CC-button, counter for optimal acceleration
-      static unsigned long last_interrupt_time = 0;
+    if(bitRead(sWheelMsg.buf[1],3)){ //CC-button, counter for optimal acceleration
+     // static unsigned long last_interrupt_time = 0;
       unsigned long interrupt_time = millis();
       if (interrupt_time - last_interrupt_time > 200){
         optimalCounter++;
@@ -283,17 +310,17 @@ void sWheelCan(){
         last_interrupt_time = interrupt_time;
       }
     }
-    if(bitRead(rxMsg.buf[1],4)){ //OptimalCurrent
+    if(bitRead(sWheelMsg.buf[1],4)){ //OptimalCurrent
       
     }
-    if(bitRead(rxMsg.buf[1],5)){ //Lap
+    if(bitRead(sWheelMsg.buf[1],5)){ //Lap
       
     }
-    if(bitRead(rxMsg.buf[1],6)){ // Horn
+    if(bitRead(sWheelMsg.buf[1],6)){ // Horn
       // HORN ON
     }
-    if(bitRead(rxMsg.buf[1],7)){ //OptimalBrake
+    if(bitRead(sWheelMsg.buf[1],7)){ //OptimalBrake
       
     }
-  }
+  
 }

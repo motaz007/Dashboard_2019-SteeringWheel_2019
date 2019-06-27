@@ -28,15 +28,16 @@ void initScreen(Adafruit_SharpMem& screen, bool right) {
     screen.begin();
     screen.clearDisplay();
     drawBackground(screen, right);
+    screen.setRotation(ORIENTATION::LEFT);
     initText(screen, right);
     initScreenContent(screen, right);
-    screen.setRotation(ORIENTATION::LEFT);
+    
     screen.refresh();
 }
 
 void initScreenContent(Adafruit_SharpMem& screen, bool right)
 {
- if(!right)
+ if(right)
  {
    drawSpeed(screen, 0, 0);                                                                          //always starting up at a stand still
    drawGear(screen, 'N');                                                                            //always starting up in neutral
@@ -45,7 +46,7 @@ void initScreenContent(Adafruit_SharpMem& screen, bool right)
    drawCurrentValue(screen, 0, 0);
    drawPowerConsumption(screen, 0, 0);                                                                   
    drawRaceMode(screen, true);                                                                       //always starting up in race mode
- } else if (right) 
+ } else if (!right) 
  {
    drawLapCount(screen, 1);
    drawLapTime(screen, 0);                                                                              
@@ -103,7 +104,7 @@ void initText(Adafruit_SharpMem& screen, bool right) {
 
 void updateScreen(Adafruit_SharpMem& screen, bool right)
 {
- if(!right)
+ if(right)
  {
    drawSpeed(screen, motor1Msg.buf[6]/5, motor2Msg.buf[6]/5);                                        //speed is sent from motor controllers at position 7
                                                                                                      //it is sent as km/h * 5 to utilize the measuring range
@@ -118,13 +119,16 @@ void updateScreen(Adafruit_SharpMem& screen, bool right)
                                 (motor2Msg.buf[4]<<8 + motor2Msg.buf[5])/10);                        //first position needs 8 bitshifts, and that value i used energy *10;                                                                   
    //drawRaceMode(screen, raceModeON);                                                               //variable defined in main
  
- } else if (right) 
+ } else if (!right) 
  {
    drawLapCount(screen, 2);
    drawLapTime(screen, 1);                                                                              
    drawTime(screen, 1000);
-   drawSector(screen, sWheelMsg.buf[7]);                                                             //sent at last position of steering wheel
+   drawSector(screen, sWheelMsg.buf[7]);  //sent at last position of steering wheel
+   
  }
+  //readCan(rxMsg, sWheelMsg);
+// printCanToSerial(sWheelMsg, true);
    screen.refresh();
 }
 
@@ -184,6 +188,7 @@ void drawRectangle(Adafruit_SharpMem& screen)//, int width, int height)
 
 void drawSector(Adafruit_SharpMem& screen, int sector) {
     drawRectangle(screen);
+    //Serial.println(sector, HEX);
     char str[8] = {0};
     sprintf(str, "%u", sector);
     screen.setFont(&Open_Sans_Bold_36);
