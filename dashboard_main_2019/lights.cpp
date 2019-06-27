@@ -16,7 +16,7 @@ void turnOffStrip(Adafruit_NeoPixel& strip, const uint16_t& start, uint16_t end)
     }
 
     for (uint16_t i = start; i < end; ++i) {
-        strip.setPixelColor(i, strip.Color(0, 0, 0, 0)); //turn off leds one by one
+        strip.setPixelColor(i, COLOR_OFF); //turn off leds one by one
     }
 
     strip.show();
@@ -26,7 +26,7 @@ void turnOffStrip(Adafruit_NeoPixel& strip, const uint16_t& start, uint16_t end)
 
 /*-------------------------- SWHEEL FUNCTIONS -------------------------*/
 void startUpSwheelLight(Adafruit_NeoPixel& shweelLights){
-    shweelLights.setBrightness(40); 
+    shweelLights.setBrightness(40);
     shweelLights.begin();
     for (int i = shweelLights.numPixels(); i >= 0; --i) {
       shweelLights.setPixelColor(i, COLOR_ERROR);
@@ -58,21 +58,10 @@ void swheelOK(Adafruit_NeoPixel& shweelLights) {
 }
 
 /*-------------------------- DASH FUNCTIONS -------------------------*/
-void initLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights)
-{
- frontLights.begin();
- backLights.begin();
- frontLights.setBrightness(BRIGHTNESS_FRONT);
- backLights.setBrightness(BRIGHTNESS_BACK);
-}
-
 void showLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights){
   turnOffStrip(frontLights, 0, NUM_FRONTLIGHTS);
   turnOffStrip(backLights, 0, NUM_BACKLIGHTS);
-
-  //BACKLIGHTS
-  backLights.setBrightness(BRIGHTNESS_BACK);
-  frontLights.setBrightness(BRIGHTNESS_FRONT);
+  
   for (int i = 288; i > 255; i--){
       backLights.setPixelColor(i, COLOR_BACKLIGHTS);
       backLights.show();
@@ -97,8 +86,6 @@ void showLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights){
       }
     }
 
-    // FRONTLIGHTS
-
   i = 0;
   n = 0;
   j = 0;
@@ -120,8 +107,7 @@ void showLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights){
       }
       i++;
       n++;
-      frontLights.show();
-      
+      frontLights.show(); 
     }
 }
 
@@ -139,15 +125,15 @@ void blinkLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights, 
   if(left){                                                                                                             // LEFT SIDE OF CAR
     for (int i = 1; i < NUM_BLINK; i++) {
       if(raceModeON){                                                                                                   // IF RACEMODE OR SHOWMODE
-        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_OFF);                                         // TURN OFF FRONTLIGHTS BEHIND BLINK
+        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_OFF);                                         // TURN OFF FRONTLIGHTS BEHIND BLINK
       }else{
-        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_FRONTLIGHTS);                                 // TURN ON FRONTLIGHTS BEHIND BLINK
+        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_FRONTLIGHTS);                                 // TURN ON FRONTLIGHTS BEHIND BLINK
       }
       frontLights.show();
     }
     turnOffStrip(backLights, BLINK_LEFT_START_BACKLIGHTS, BLINK_LEFT_END_BACKLIGHTS - 2);                               // TURN OFF BACKLIGHTS BEHIND BLINK
     for (int i = 1; i < NUM_BLINK; i++) {
-        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_BLINKLIGHTS);                                 // FILL BLINKLIGHTS GRADUALY
+        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_BLINKLIGHTS);                                 // FILL BLINKLIGHTS GRADUALY
         backLights.setPixelColor(BLINK_LEFT_START_BACKLIGHTS + i, COLOR_BLINKLIGHTS);
         frontLights.show();
         backLights.show();
@@ -156,25 +142,25 @@ void blinkLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights, 
   } 
     for (int i = 1; i < NUM_BLINK; i++) {
       if(raceModeON){
-        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_OFF);                                         // SET COLOR BACK TO ORIGINAL COLOR
+        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_OFF);                                         // SET COLOR BACK TO ORIGINAL COLOR
         backLights.setPixelColor(BLINK_LEFT_START_BACKLIGHTS + i, COLOR_OFF);
       }else{
-        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_FRONTLIGHTS);                                 
+        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i +3, COLOR_FRONTLIGHTS);                                 
         backLights.setPixelColor(BLINK_LEFT_START_BACKLIGHTS + i, COLOR_BACKLIGHTS);
       }   
   }
   if(!left){                                                                                                            // RIGHT SIDE OF CAR
     for (int i = 1; i < NUM_BLINK; i++) {
       if(raceModeON){                                                                                                   // IF RACEMODE OR SHOWMODE
-        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_OFF);                                        // TURN OFF FRONTLIGHTS BEHIND BLINK
+        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_OFF);                                        // TURN OFF FRONTLIGHTS BEHIND BLINK
       }else{
-        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_FRONTLIGHTS);                                // TURN ON FRONTLIGHTS BEHIND BLINK
+        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_FRONTLIGHTS);                                // TURN ON FRONTLIGHTS BEHIND BLINK
       }
       frontLights.show();
     }
     turnOffStrip(backLights, BLINK_RIGHT_END_BACKLIGHTS , BLINK_RIGHT_START_BACKLIGHTS-2);                              // TURN OFF BACKLIGHTS BEHIND BLINK
     for (int i = 1; i < NUM_BLINK; i++) {
-        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_BLINKLIGHTS);                                // FILL BLINKLIGHTS GRADUALY
+        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_BLINKLIGHTS);                                // FILL BLINKLIGHTS GRADUALY
         backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_BLINKLIGHTS);
         frontLights.show();
         backLights.show();
@@ -183,13 +169,13 @@ void blinkLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights, 
   } 
   for (int i = 1; i < NUM_BLINK; i++) {
       if(raceModeON){
-        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_OFF);
+        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_OFF);
         backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_OFF);                                          // SET COLOR BACK TO ORIGINAL COLOR
-      } else {
-        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_FRONTLIGHTS);
+      }else{
+        frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_FRONTLIGHTS);
         backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_BACKLIGHTS);
       
-    }
+    } 
   }
   
   frontLights.show();
@@ -201,9 +187,9 @@ bool hazardLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights,
     turnOffStrip(backLights, BLINK_LEFT_START_BACKLIGHTS , BLINK_LEFT_END_BACKLIGHTS);                                 // TURN OFF LIGHTS BEHIND BLINK
     turnOffStrip(backLights, BLINK_RIGHT_END_BACKLIGHTS, BLINK_RIGHT_START_BACKLIGHTS);   
     for (int i = 1; i < NUM_BLINK; i++) {
-          frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_BLINKLIGHTS);                              // FILL BLINKLIGHTS GRADUALY
+          frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_BLINKLIGHTS);                              // FILL BLINKLIGHTS GRADUALY
           backLights.setPixelColor(BLINK_LEFT_START_BACKLIGHTS + i, COLOR_BLINKLIGHTS);
-          frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_BLINKLIGHTS);
+          frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_BLINKLIGHTS);
           backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_BLINKLIGHTS);
           frontLights.show();
           backLights.show();
@@ -213,14 +199,14 @@ bool hazardLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights,
   }else if(hazardLightsON == false || hazardLightRunning == true){
   if(raceModeON){
       for (int i = 1; i < NUM_BLINK; i++) {
-        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_OFF);                                        // TURN OFF FRONTLIGHTS BEHIND BLINK
+        frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_OFF);                                        // TURN OFF FRONTLIGHTS BEHIND BLINK
         backLights.setPixelColor(BLINK_LEFT_START_BACKLIGHTS + i, COLOR_OFF);                                          // TURN OFF BACKLIGHTS BEHIND BLINK
       }
     }else{
       for (int i = 1; i < NUM_BLINK; i++) {
-              frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i, COLOR_FRONTLIGHTS);                          // SET COLOR BACK TO ORIGINAL COLOR
+              frontLights.setPixelColor(BLINK_LEFT_START_FRONTLIGHTS - i + 3, COLOR_FRONTLIGHTS);                          // SET COLOR BACK TO ORIGINAL COLOR
               backLights.setPixelColor(BLINK_LEFT_START_BACKLIGHTS + i, COLOR_BACKLIGHTS);
-              frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i, COLOR_FRONTLIGHTS);
+              frontLights.setPixelColor(BLINK_RIGHT_START_FRONTLIGHTS + i - 4, COLOR_FRONTLIGHTS);
               backLights.setPixelColor(BLINK_RIGHT_START_BACKLIGHTS - i, COLOR_BACKLIGHTS);
               
       }
@@ -231,16 +217,20 @@ bool hazardLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights,
     }
   return hazardLightRunning;
 }
+
 void raceLights(Adafruit_NeoPixel& frontLights, Adafruit_NeoPixel& backLights) {
-  turnOffStrip(frontLights, 0, NUM_FRONTLIGHTS);
-  turnOffStrip(backLights, 0,NUM_BACKLIGHTS);   
-  for (int i = RACE_START_FRONTLIGHTS; i < RACE_END_FRONTLIGHTS; i++) {
-      frontLights.setPixelColor(i, COLOR_FRONTLIGHTS);
-  }
-  for(int i = RACE_LEFT_START_BACKLIGHTS; i < RACE_LEFT_END_BACKLIGHTS; i++){
-      backLights.setPixelColor(RACE_LEFT_START_BACKLIGHTS - i, COLOR_BACKLIGHTS);
-      backLights.setPixelColor(RACE_RIGHT_END_BACKLIGHTS - i, COLOR_BACKLIGHTS);
-  }
-  frontLights.show();
-  backLights.show();
+    static unsigned long last_interrupt_time = 0;
+    unsigned long interrupt_time = millis();
+    turnOffStrip(frontLights, 0, NUM_FRONTLIGHTS);
+    turnOffStrip(backLights, 0,NUM_BACKLIGHTS);
+    
+    for (int i = RACE_START_FRONTLIGHTS; i < RACE_END_FRONTLIGHTS; i++) {
+        frontLights.setPixelColor(i, COLOR_FRONTLIGHTS);
+    }
+    for(int i = RACE_LEFT_START_BACKLIGHTS; i < RACE_LEFT_END_BACKLIGHTS; i++){
+        backLights.setPixelColor(RACE_LEFT_START_BACKLIGHTS + i, COLOR_BACKLIGHTS);
+        backLights.setPixelColor(RACE_RIGHT_END_BACKLIGHTS - i, COLOR_BACKLIGHTS);
+    }
+    frontLights.show();
+    backLights.show();
 }
