@@ -59,7 +59,7 @@ int readCan(CAN_message_t& msg)
 }
 
 void printCanToSerial(const CAN_message_t& msg) {
-    Serial.print(" ");              //function to print can on form "id:length:data (separated by :)"
+    Serial.print(" ");
     Serial.print(msg.id, HEX);
     Serial.print(": ");
     Serial.print(msg.len);

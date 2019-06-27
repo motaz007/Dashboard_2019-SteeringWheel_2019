@@ -40,7 +40,7 @@ void setup() {
   initSerial();
   initCAN();
   
-  txMsg.ext = 0; //setting up message with id 270, length 8 and random messages
+  txMsg.ext = 0;
   txMsg.id = 0x270;
   txMsg.len = 8;
   txMsg.buf[0] = 0x1B;
@@ -52,7 +52,7 @@ void setup() {
   txMsg.buf[6] = 0x10;
   txMsg.buf[7] = 0x10;
 
-  pinMode(led, OUTPUT); digitalWrite(led, HIGH); //setting up leds
+  pinMode(led, OUTPUT); digitalWrite(led, HIGH);
   pinMode(greenLed, OUTPUT);
   pinMode(blueLed, OUTPUT);
 }
@@ -60,28 +60,28 @@ void setup() {
 void loop() {
      
   writeCan(txMsg);
-  //printCanToSerial(txMsg);
+  printCanToSerial(txMsg);
   
   if(readCan(rxMsg)==0) {
-    digitalWrite(blueLed, HIGH);  //turnes on blue led whenever a message is recieved.
+    digitalWrite(blueLed, HIGH); 
   }
   
   printCanToSerial(rxMsg);
     delay(100);
   //Serial.println(rxMsg.id, HEX);
-  if (rxMsg.id == 0x230) { //test if the id is 230
-    Serial.print("Swheel: "); Serial.println(" "); printCanToSerial(rxMsg); digitalWrite(greenLed, HIGH); //print message
+  if (rxMsg.id == 0x230) {
+    Serial.print("Swheel: "); Serial.println(" "); printCanToSerial(rxMsg); digitalWrite(greenLed, HIGH);
   }
-  if (rxMsg.id == 0x260) { //test if id is 260
-    Serial.print("Motor: "); Serial.println(" "); printCanToSerial(rxMsg); digitalWrite(greenLed, HIGH); //print message
+  if (rxMsg.id == 0x260) {
+    Serial.print("Motor: "); Serial.println(" "); printCanToSerial(rxMsg); digitalWrite(greenLed, HIGH);
   }
 
   delay(200);
   
-  digitalWrite(blueLed, LOW); //testing of leds on the pcb, seem to be working fine.
+  digitalWrite(blueLed, LOW);
   
-  delay(200); //delays to make fancy lights and to prevent can from crashing (short codes run main too fast/often)
+  delay(200);
   
-  digitalWrite(greenLed, LOW); //testing of leds
+  digitalWrite(greenLed, LOW);
   delay(200);
 }
