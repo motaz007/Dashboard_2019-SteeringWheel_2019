@@ -62,7 +62,7 @@ bool windowWiperON = false;
 uint8_t brakeVal = 0;
 uint8_t optimalCounter;
 
-uint8_t interrutThreshold = 500; //#define?
+uint8_t interruptThreshold = 500; //#define?
 
 
 
@@ -134,89 +134,89 @@ void loop() {
 
 /*----------------------- ISR FUCTIONS -----------------------*/
 
-void wiper_ISR()
+void wiper_ISR()                                                                            //Interrupt functionfor wiper button
 {
   static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  unsigned long interrupt_time = millis();                                                  //storing time of interrupt
 
-  if (interrupt_time - last_interrupt_time > interrutThreshold) {
+  if (interrupt_time - last_interrupt_time > interruptThreshold) {                          //button debounce, testing if the button has been pushed recently
     int state = digitalRead(PIN_HAZARD);
     if (state == LOW && windowWiperON == false) {
-      windowWiperON = true;
+      windowWiperON = true;                                                                 //
     } else {
       windowWiperON = false;
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time = interrupt_time;                                                   //updating time of last interrupt
     
     if (debug) {
-      Serial.println("Wiper pressed");
+      Serial.println("Wiper pressed");                                                      //should be printed nicely for informative debug, this works for now
     }
   }
 }
 
-void hazard_ISR()
+void hazard_ISR()                                                                           //Interrupt function for hazard light button
 {
   static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  unsigned long interrupt_time = millis();                                                  //storing time of interrupt
 
-  if (interrupt_time - last_interrupt_time > 500){
-      int state = digitalRead(PIN_HAZARD);
-      if ( state == LOW && hazardLightON == false) {
-        hazardLightON = true;
-      } else {
-        hazardLightON = false;
-      }
-      last_interrupt_time = interrupt_time;
-      if (debug) {
-        Serial.println("Hazard pressed");
-      }
+  if (interrupt_time - last_interrupt_time > interruptThreshold){                           //button debounce, testing if the button has been pushed recently
+    int state = digitalRead(PIN_HAZARD);
+    if ( state == LOW && hazardLightON == false) {                                          //
+      hazardLightON = true;
+    } else {
+      hazardLightON = false;
+    }
+    last_interrupt_time = interrupt_time;                                                   //updating time of last interrupt
+    if (debug) {
+      Serial.println("Hazard pressed");                                                     //should be printed nicely for informative debug, this works for now
+    }
   }
 }
 
 
-void raceMode_ISR()
+void raceMode_ISR()                                                                         //Interrupt function for race mode button
 {
   static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  unsigned long interrupt_time = millis();                                                  //storing time of interrupt
 
-  if (interrupt_time - last_interrupt_time > interrutThreshold) {
+  if (interrupt_time - last_interrupt_time > interruptThreshold) {                          //button debounce, testing if the button has been pushed recently
     int state = digitalRead(PIN_RACE_MODE);
-    if  (state == HIGH && raceModeON == false) {
+    if  (state == HIGH && raceModeON == false) {                                            //
       raceModeON = true;
       raceLights(frontlights, backlights);
-    } else if (state == HIGH && raceModeON == true) {
+    } else if (state == HIGH && raceModeON == true) {                       
       raceModeON = false;
       showLights(frontlights, backlights);
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
     if (debug) {
-      Serial.println("Race mode pressed");
+      Serial.println("Race mode pressed");                                                 //should be printed nicely for informative debug, this works for now
     }
   }
 }
 
-void reset_ISR()
+void reset_ISR()                                                                           //Interrupt function for reset button
 {
   static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  unsigned long interrupt_time = millis();                                                 //storing time of interrupt
      
-  if (interrupt_time - last_interrupt_time > interrutThreshold) {
-    last_interrupt_time = interrupt_time;
+  if (interrupt_time - last_interrupt_time > interruptThreshold) {                         //button debounce, testing if the button has been pushed recently
+    last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
     if (debug) {
-      Serial.println("Reset pressed"); //if debug
+      Serial.println("Reset pressed");                                                     //should be printed nicely for informative debug, this works for now
     }
   }
 }
 
 
-void lights_ISR()
+void lights_ISR()                                                                          //Interrupt function for lights button
 {
   static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  unsigned long interrupt_time = millis();                                                 //storing time of interrupt
 
-  if (interrupt_time - last_interrupt_time > 500) {
+  if (interrupt_time - last_interrupt_time > 500) {                                        //button debounce, testing if the button has been pushed recently
     int state = digitalRead(PIN_HAZARD);
-    if(state == LOW && lightON == false) {
+    if(state == LOW && lightON == false) {                                                 //
       lightON = true;
       if (raceModeON) {
         raceLights(frontlights, backlights);
@@ -228,59 +228,58 @@ void lights_ISR()
       turnOffStrip(backlights, 0, NUM_BACKLIGHTS);
       lightON = false;
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
     if (debug) {
-      Serial.println("lights pressed");
+      Serial.println("lights pressed");                                                    //should be printed nicely for informative debug, this works for now
     }
   }
 }
 
 
-void blank_ISR()
+void blank_ISR()                                                                           //Interrupt function for blank button
 {
   static unsigned long last_interrupt_time = 0;
-  unsigned long interrupt_time = millis();
+  unsigned long interrupt_time = millis();                                                 //storing time of interrupt
  
-  if (interrupt_time - last_interrupt_time > interrutThreshold){
+  if (interrupt_time - last_interrupt_time > interruptThreshold){                          //button debounce, testing if the button has been pushed recently
     if (debug == true) 
-    {
+    {                                                                                      //
       debug = false;
     } else
       debug = true;
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time = interrupt_time;                                                 //updating time of last interrupt
     if (debug) {
-      Serial.println("blank aka debug pressed");
+      Serial.println("blank pressed");                                                    //should be printed nicely for informative debug, this works for now
     }
   }
 }
 
 void brake_ISR() 
-{                                                                         //interrupt function for brake light
-                                                                          // this button is reversed (physically, normally open)
+{                                                                                        //Interrupt fuction for brake light
   static unsigned long last_interrupt_time;
-  unsigned long interrupt_time = millis();                                                  // RISING -- is unpressed
+  unsigned long interrupt_time = millis();                                               //storing time of last interrupt
 
   if (interrupt_time - last_interrupt_time > 200) {
     int state = digitalRead(PIN_BRAKE);
-    if (state == HIGH) {                                                    // brake lights off   
+    if (state == HIGH) {                                                                 //testing if it should turn brake lights off   
         brakeON = false;
         brakeLights(backlights, brakeON);
         txMsg.buf[0] = 0x01;
         
         if (debug) {
-          Serial.println("  NOT BRAKING  ");
+          Serial.println("  NOT BRAKING  ");                                             //should be printed nicely for informative debug, this works for now
         }
-    } else if(state == LOW) {                                               // brake lights on
+    } else if(state == LOW) {                                                            //testing if it should turn brake lights on
         brakeON = true;
         brakeLights(backlights, brakeON);
         txMsg.buf[0] = 0x00;
         
         if (debug) {
-          Serial.println("  BRAKING  ");
+          Serial.println("  BRAKING  ");                                                 //should be printed nicely for informative debug, this works for now
         }
     }
-    last_interrupt_time = interrupt_time;
+    last_interrupt_time = interrupt_time;                                                //updating time of last interrupt
   }
 } 
 
