@@ -31,17 +31,17 @@ bool debug = true;
 #define PIN_FRONTLIGHT   36
 
 
-  // BUTTONS
-  #define PIN_WIPER            5
-  #define PIN_HAZARD           6
-  #define PIN_RACE_MODE        7
-  #define PIN_RESET            8
-  
-  #define PIN_LIGHT_BUTTON     24
-  #define PIN_BATTERY          25                                                             //not used
-  #define PIN_PROPULTION_POWER 26                                                             //not used
-  #define PIN_BLANK            27
-  #define PIN_BRAKE            28
+// BUTTONS
+#define PIN_WIPER            5
+#define PIN_HAZARD           6
+#define PIN_RACE_MODE        7
+#define PIN_RESET            8
+ 
+#define PIN_LIGHT_BUTTON     24
+#define PIN_BATTERY          25                                                             //not used
+#define PIN_PROPULTION_POWER 26                                                             //not used
+#define PIN_BLANK            27
+#define PIN_BRAKE            28
 
 #define PIN_JENS_1 15
 #define PIN_JENS_2 16
@@ -73,31 +73,31 @@ Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 /*------------------------- FUCTIONS -------------------------*/
 
 void initPins() {
+  
+  pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //init wiper with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_WIPER), wiper_ISR, FALLING);
 
-    pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //init wiper with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_WIPER), wiper_ISR, FALLING);
-    delay(50);
-    pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //init hazzard light with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_HAZARD), hazard_ISR, FALLING);
-    delay(50);
-    pinMode(PIN_RACE_MODE, INPUT_PULLUP);                                                   //init race mode with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_RACE_MODE), raceMode_ISR, FALLING);
-    delay(50);
-    pinMode(PIN_RESET, INPUT_PULLUP);                                                       //ini reset button with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_RESET), reset_ISR, FALLING);
-delay(50);
-    pinMode(PIN_LIGHT_BUTTON, INPUT_PULLUP);                                                //init light button with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_BUTTON), lights_ISR, FALLING);
-    delay(50);
-    pinMode(PIN_BLANK, INPUT_PULLUP);                                                       //init blank button with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_BLANK), blank_ISR, FALLING);
-    delay(50);
-    pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //init brake pedal sensor (button) with interrupt
-    attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
-    delay(50);
-    if(debug) {
-      Serial.println("all buttons initialized with interrupt");
-    }
+  pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //init hazzard light with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_HAZARD), hazard_ISR, FALLING);
+
+  pinMode(PIN_RACE_MODE, INPUT_PULLUP);                                                   //init race mode with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_RACE_MODE), raceMode_ISR, FALLING);
+
+  pinMode(PIN_RESET, INPUT_PULLUP);                                                       //init reset button with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_RESET), reset_ISR, FALLING);
+   
+  pinMode(PIN_LIGHT_BUTTON, INPUT_PULLUP);                                                //init light button with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_LIGHT_BUTTON), lights_ISR, FALLING);
+
+  pinMode(PIN_BLANK, INPUT_PULLUP);                                                       //init blank button with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_BLANK), blank_ISR, FALLING);
+
+  pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //init brake pedal sensor (button) with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
+
+  if(debug) {
+    Serial.println("all buttons initialized with interrupt");
+  }
 }
 
 /*------------------------- SETUP -------------------------*/
@@ -126,19 +126,17 @@ void loop() {
   updateScreen(leftScreen, LEFTSCREEN);
   updateScreen(rightScreen, RIGHTSCREEN);
   sWheelCan();
-  //printCanToSerial(sWheelMsg, true);
+  printCanToSerial(sWheelMsg, true);
   delay(100);
 }
 
 /*----------------------- ISR FUCTIONS -----------------------*/
 
 void wiper_ISR(){
-  static unsigned long last_interrupt_time;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
 
-  delay(50);
   if (interrupt_time - last_interrupt_time > 500){
-    delay(50);
     
     Serial.println("wiper pressed"); //if debug
     int state = digitalRead(PIN_HAZARD);
@@ -152,12 +150,11 @@ void wiper_ISR(){
 }
 
 void hazard_ISR(){
-  static unsigned long last_interrupt_time;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
 
-  delay(50);
   if (interrupt_time - last_interrupt_time > 500){
-    delay(50);
+
       Serial.println("hazzard pressed"); //if debug
       int state = digitalRead(PIN_HAZARD);
       if( state == LOW && hazardLightON == false){
@@ -171,12 +168,10 @@ void hazard_ISR(){
 
 
 void raceMode_ISR(){
-  static unsigned long last_interrupt_time;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
 
-    delay(50);
   if (interrupt_time - last_interrupt_time > 500){
-    delay(50);
     
     Serial.println("raceMode pressed"); //if debug
     int state = digitalRead(PIN_RACE_MODE);
@@ -194,26 +189,24 @@ void raceMode_ISR(){
 }
 
 void reset_ISR(){
-  static unsigned long last_interrupt_time;
-      unsigned long interrupt_time = millis();
-     delay(50);
+  static unsigned long last_interrupt_time = 0;
+  unsigned long interrupt_time = millis();
+     
   if (interrupt_time - last_interrupt_time > 500){
-    delay(15);
+    
     //nullstill diverse
     Serial.println("reset pressed"); //if debug
-    }
+   }
   last_interrupt_time = interrupt_time;
 }
 
 
 void lights_ISR(){
-  static unsigned long last_interrupt_time;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
 
- 
-    delay(50);
   if (interrupt_time - last_interrupt_time > 500){
-    delay(50); 
+    
     Serial.println("lights pressed"); //if debug
     int state = digitalRead(PIN_HAZARD);
     if(state == LOW && lightON == false){
@@ -234,11 +227,11 @@ void lights_ISR(){
 
 
 void blank_ISR(){
-  static unsigned long last_interrupt_time;
+  static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();
-    delay(50);
+ 
   if (interrupt_time - last_interrupt_time > 500){
-    delay(50);
+ 
   Serial.println("blank aka debug pressed"); //if debug
   
   if (debug == true) 
@@ -256,9 +249,8 @@ void brake_ISR() { //interrupt function for brake light
   static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();
 
-    delay(50);
   if (interrupt_time - last_interrupt_time > 200){
-    delay(50);
+    
     int state = digitalRead(PIN_BRAKE);
 
     if (state == HIGH) {  // RISING -- is unpressed
