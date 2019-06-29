@@ -19,7 +19,7 @@
 
 #define CAN_BAUDRATE 500000                                         //CANbus in the FF car runs at 500k
 
-static CAN_message_t txMsg,                                         //output
+ static CAN_message_t txMsg,                                         //output
                      rxMsg,                                         //input (temp)
                      sWheelMsg,                                     //steering wheel
                      motor1Msg,                                     //motor 1, not sure nor important if left or right

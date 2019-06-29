@@ -46,6 +46,8 @@ bool debug = true;
 #define PIN_JENS_1 15
 #define PIN_JENS_2 16
 
+#define PIN_HORN 17
+
 // LED's on PCB for CAN
 #define PIN_CAN_RX_LED 23
 #define PIN_CAN_TX_LED 22
@@ -97,6 +99,8 @@ void initPins() {
   pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //init brake pedal sensor (button) with interrupt
   attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
 
+  pinMode(PIN_HORN, OUTPUT);
+
   if(debug) {
     Serial.println("all buttons initialized with interrupt");
   }
@@ -117,6 +121,8 @@ void setup() {
   initScreen(rightScreen, RIGHTSCREEN);
 
   initPins();                                                                               //initPins needs to be last to avoid malfunction, not sure what goes wrong
+  
+
 }
 
 
@@ -128,7 +134,7 @@ void loop() {
   updateScreen(leftScreen, LEFTSCREEN);
   updateScreen(rightScreen, RIGHTSCREEN);
   sWheelCan();
-  printCanToSerial(sWheelMsg, true);
+  //printCanToSerial(sWheelMsg, true);
   delay(100);
 }
 
@@ -252,7 +258,6 @@ void blank_ISR()                                                                
     if (debug) {
       Serial.println("blank pressed");                                                    //should be printed nicely for informative debug, this works for now
     }
-  }
 }
 
 void brake_ISR() 
@@ -262,7 +267,7 @@ void brake_ISR()
 
   if (interrupt_time - last_interrupt_time > 200) {
     int state = digitalRead(PIN_BRAKE);
-    if (state == HIGH && RegenBrakeON) {                                                                 //testing if it should turn brake lights off   
+    if (state == HIGH && regenBrakeON) {                                                                 //testing if it should turn brake lights off   
         brakeON = false;
         brakeLights(backlights, brakeON);
         txMsg.buf[0] = 0x01;
@@ -312,9 +317,10 @@ void sWheelCan()
       
     }
     if(bitRead(sWheelMsg.buf[1],6)){ // Horn
-      digitalRead(PIN_HORN, HIGH);
+      digitalWrite(PIN_HORN, HIGH);
+      printCanToSerial(sWheelMsg, debug);
     }else{
-      digitalRead(PIN_HORN, LOW);
+      digitalWrite(PIN_HORN, LOW);
 
     }
     if (bitRead(sWheelMsg.buf[1],7)) { //OptimalBrake

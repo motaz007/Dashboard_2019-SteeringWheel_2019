@@ -59,19 +59,11 @@ int writeCan(const CAN_message_t& msg)
 
 void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
 {
-  sWheelMsg.id=0x230;
-  sWheelMsg.len=8;
-  sWheelMsg.buf[7]=0x03;
-
-  msg.id=0x230;
-  msg.len=8;
-  msg.buf[7]=0x03;
+  
   
   while(Can0.available()) 
   {
    Can0.read(rxMsg);     //saves new can-message to rxMsg
-   rxMsg.id=0x230;
-   rxMsg.buf[7]=0x03;
    switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
     case clutchID:
       clutchMsg = rxMsg;
