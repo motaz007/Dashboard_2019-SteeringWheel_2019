@@ -32,7 +32,7 @@ bool debug = true;
 
 
 // BUTTONS
-#define PIN_WIPER            5
+#define PIN_WIPER_BUTTON            5
 #define PIN_HAZARD           6
 #define PIN_RACE_MODE        7
 #define PIN_RESET            8
@@ -43,10 +43,10 @@ bool debug = true;
 #define PIN_BLANK            27
 #define PIN_BRAKE            28
 
-#define PIN_JENS_1 15
-#define PIN_JENS_2 16
+//#define PIN_JENS_1 15
+//#define PIN_JENS_2 16
 
-#define PIN_HORN 17
+#define PIN_WIPER 15
 
 // LED's on PCB for CAN
 #define PIN_CAN_RX_LED 23
@@ -78,8 +78,8 @@ Adafruit_SharpMem rightScreen(SR_SCK, SR_MOSI, SR_CS, WIDTH, HEIGHT);
 
 void initPins() {
   
-  pinMode(PIN_WIPER, INPUT_PULLUP);                                                       //init wiper with interrupt
-  attachInterrupt(digitalPinToInterrupt(PIN_WIPER), wiper_ISR, FALLING);
+  pinMode(PIN_WIPER_BUTTON, INPUT_PULLUP);                                                       //init wiper with interrupt
+  attachInterrupt(digitalPinToInterrupt(PIN_WIPER_BUTTON), wiper_ISR, FALLING);
 
   pinMode(PIN_HAZARD, INPUT_PULLUP);                                                      //init hazzard light with interrupt
   attachInterrupt(digitalPinToInterrupt(PIN_HAZARD), hazard_ISR, FALLING);
@@ -99,7 +99,7 @@ void initPins() {
   pinMode(PIN_BRAKE, INPUT_PULLUP);                                                       //init brake pedal sensor (button) with interrupt
   attachInterrupt(digitalPinToInterrupt(PIN_BRAKE), brake_ISR, CHANGE);
 
-  pinMode(PIN_HORN, OUTPUT);
+  pinMode(PIN_WIPER, OUTPUT);
 
   if(debug) {
     Serial.println("all buttons initialized with interrupt");
@@ -146,17 +146,23 @@ void wiper_ISR()                                                                
   unsigned long interrupt_time = millis();                                                  //storing time of interrupt
 
   if (interrupt_time - last_interrupt_time > interruptThreshold) {                          //button debounce, testing if the button has been pushed recently
-    int state = digitalRead(PIN_HAZARD);
-    if (state == LOW && windowWiperON == false) {
+    //int state = digitalRead(PIN_HAZARD);
+    if (/*state == LOW &&*/ windowWiperON == false) {
       windowWiperON = true;                                                                 //
-    } else {
+      digitalWrite(PIN_WIPER, HIGH);
+      if (debug) {
+      Serial.println("Wiper on");                                                      //should be printed nicely for informative debug, this works for now
+    }
+    } else if (windowWiperON == true) {
       windowWiperON = false;
+      digitalWrite(PIN_WIPER, LOW);
+      if (debug) {
+      Serial.println("Wiper off");                                                      //should be printed nicely for informative debug, this works for now
+    }
     }
     last_interrupt_time = interrupt_time;                                                   //updating time of last interrupt
     
-    if (debug) {
-      Serial.println("Wiper pressed");                                                      //should be printed nicely for informative debug, this works for now
-    }
+    
   }
 }
 
@@ -317,11 +323,7 @@ void sWheelCan()
       
     }
     if(bitRead(sWheelMsg.buf[1],6)){ // Horn
-      digitalWrite(PIN_HORN, HIGH);
-      printCanToSerial(sWheelMsg, debug);
-    }else{
-      digitalWrite(PIN_HORN, LOW);
-
+      
     }
     if (bitRead(sWheelMsg.buf[1],7)) { //OptimalBrake
       
