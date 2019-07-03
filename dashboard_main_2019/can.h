@@ -19,19 +19,24 @@
 
 #define CAN_BAUDRATE 500000                                         //CANbus in the FF car runs at 500k
 
- static CAN_message_t txMsg,                                         //output
+
+
+static CAN_message_t txMsg,                                         //output
                      rxMsg,                                         //input (temp)
-                     sWheelMsg,                                     //steering wheel
+                     sWheelMsg,                                    //steering wheel
                      motor1Msg,                                     //motor 1, not sure nor important if left or right
                      motor2Msg,                                     //motor 2
-                     clutchMsg;                                     //actuator board, used for gear. Only using one as these should be koordinated 
+                     clutchMsg;                                     //actuator board, used for gear. Only using one as these should be koordinated
+
+
+
                                                                     //(if not it's probably better if the driver doesn't get that info...)
 /*-------------------- Functions for CANbus --------------------*/
 void canFilter();
 void initCAN();
 void initCanMessage(CAN_message_t& msg, int length);
 int writeCan(const CAN_message_t& msg);
-void readCan(CAN_message_t& rxMsg, CAN_message_t& msg);
+void readCan(CAN_message_t& rxMsg,CAN_message_t& sWheelMsg, CAN_message_t& motor1Msg, CAN_message_t& motor2Msg);
 void printCanToSerial(const CAN_message_t& msg, bool debug);
 
 #endif

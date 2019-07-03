@@ -57,19 +57,20 @@ int writeCan(const CAN_message_t& msg)
   return Can0.write(msg);
 }
 
-void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
+void readCan(CAN_message_t& rxMsg,CAN_message_t& sWheelMsg, CAN_message_t& motor1Msg, CAN_message_t& motor2Msg)
 {
   
   
   while(Can0.available()) 
   {
    Can0.read(rxMsg);     //saves new can-message to rxMsg
+      
    switch(rxMsg.id) {                                                                //sorts the message to the correct id to be used later
     case clutchID:
       clutchMsg = rxMsg;
       break;
     case sWheelID:
-      msg = rxMsg;
+      sWheelMsg = rxMsg;
       break;
     case motor1ID:
       motor1Msg = rxMsg;
@@ -78,7 +79,9 @@ void readCan(CAN_message_t& rxMsg, CAN_message_t& msg)
       motor2Msg = rxMsg;
       break;
    }
-   
+   //printCanToSerial(rxMsg, true);
+   //printCanToSerial(motor1Msg, true);
+   //printCanToSerial(motor2Msg,true);
   }
   
   

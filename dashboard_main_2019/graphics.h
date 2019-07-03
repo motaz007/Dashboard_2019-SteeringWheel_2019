@@ -82,10 +82,12 @@ const uint8_t lapTimeHorizontalMargin = 90;
 const uint8_t lapTimeVertical = 200;
 const uint8_t lapTimeHorizontal = 140;
 
-//Tme 
+//Time 
 const uint8_t timeHorizontalMargin = 125;
 const uint8_t timeVerticalMargin = 250;
 const uint8_t timeHorizontal = 105;
+
+
 
 /*-------------------------- FUNCTIONS --------------------------*/
 
@@ -104,7 +106,7 @@ void initScreenContent(Adafruit_SharpMem& screen, bool right);
 void initText(Adafruit_SharpMem& screen, bool right);
 
 //UPDATE FUNCTIONS
-void updateScreen(Adafruit_SharpMem& screen, bool right);
+//void updateScreen(Adafruit_SharpMem& screen, bool right);
 
 //DRAW FUNCTIONS FOR LEFT SCREEN
 void drawLapCount(Adafruit_SharpMem& screen, const uint8_t& lapCount);
@@ -112,7 +114,8 @@ void drawLapTime(Adafruit_SharpMem& screen, const int& lapTimeSeconds);
 void drawTime(Adafruit_SharpMem& screen, const int& timeSeconds);
 void drawRectangle(Adafruit_SharpMem& screen);
 void drawSector(Adafruit_SharpMem& screen, int sector);
-
+void drawHazard(Adafruit_SharpMem& screen, bool hazardON);
+void drawOptimalCurrent(Adafruit_SharpMem& screen, bool ON);
 
 //DRAW FUNCTIONS FOR RIGHT SCREEN
 void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed);

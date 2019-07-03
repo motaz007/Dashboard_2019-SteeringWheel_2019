@@ -100,8 +100,8 @@ void initText(Adafruit_SharpMem& screen, bool right) {
     
 }
 
-//INIT FUNCTIONS
-
+//UPDATE FUNCTIONS
+/*
 void updateScreen(Adafruit_SharpMem& screen, bool right)
 {
  if(right)
@@ -124,13 +124,13 @@ void updateScreen(Adafruit_SharpMem& screen, bool right)
    drawLapCount(screen, 2);
    drawLapTime(screen, 1);                                                                              
    drawTime(screen, 1000);
-   drawSector(screen, sWheelMsg.buf[7]);  //sent at last position of steering wheel
+   //drawSector(screen, sWheelMsg.buf[7]);  //sent at last position of steering wheel
    
  }
   //readCan(rxMsg, sWheelMsg);
-// printCanToSerial(sWheelMsg, true);
+  //printCanToSerial(sWheelMsg, true);
    screen.refresh();
-}
+}*/
 
 //DRAW FUNCTIONS FOR LEFT SCREEN
 
@@ -196,12 +196,33 @@ void drawSector(Adafruit_SharpMem& screen, int sector) {
     drawString(screen, str, 57, 245, 1);
 }
 
+void drawHazard(Adafruit_SharpMem& screen, bool hazardON) 
+{
+    screen.fillRect(19, 270-fontHeight60, fontHeight60, fontHeight60, BLACK);
+    if (hazardON) {
+      screen.setFont(&Open_Sans_Bold_60);
+      screen.setTextColor(WHITE);
+      drawString(screen, "H     ", 20, 270, 1);
+    }   
+}
+
+void drawOptimalCurrent(Adafruit_SharpMem& screen, bool On) 
+{
+    screen.fillRect(19+fontHeight60, 270-fontHeight60, fontHeight60, fontHeight60, BLACK);
+    if (On) {
+      screen.setFont(&Open_Sans_Bold_60);
+      screen.setTextColor(WHITE);
+      drawString(screen, "O     ", 20+fontHeight60, 270, 1);
+    }   
+}
+
 //DRAW FUNCTIONS FOR RIGHT SCREEN
 
 
 void drawSpeed(Adafruit_SharpMem& screen, const float& motor1speed, const float& motor2speed) 
 {
-    const uint8_t speedThreshold = 10;                                                                   //move to global? or argument?                                                 
+    
+    const uint8_t speedThreshold = 1000;                                                                   //move to global? or argument?                                                 
     int motorSpeed = 0;
     
     screen.setFont(&Open_Sans_Bold_60);                                                                  //setting correct font and size

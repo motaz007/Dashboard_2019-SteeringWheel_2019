@@ -65,8 +65,6 @@ uint8_t brakeVal = 0;
 uint8_t optimalCounter;
 
 uint8_t interruptThreshold = 500; //#define?
-
-int n = 0;
             
 
 
@@ -132,31 +130,59 @@ void updateScreen(Adafruit_SharpMem& screen, bool right)
  
  } else if (!right) 
  {
-   drawLapCount(screen, sWheelMsg.buf[6]);
+   drawLapCount(screen, 2);
    drawLapTime(screen, 1);                                                                              
    drawTime(screen, 1000);
-   drawSector(screen, sWheelMsg.buf[7]);  //sent at last position of steering wheel
+   //drawSector(screen, sWheelMsg.buf[7]);  //sent at last position of steering wheel
    
  }
-  
+  //readCan(rxMsg, sWheelMsg);
+  printCanToSerial(sWheelMsg, true);
    screen.refresh();
 }
-
+void updateScreen(Adafruit_SharpMem& screen, bool right)
+{
+ if(right)
+ {
+   drawSpeed(screen, motor1Msg.buf[6]/5, motor2Msg.buf[6]/5);                                        //speed is sent from motor controllers at position 7
+                                                                                                     //it is sent as km/h * 5 to utilize the measuring range
+                                                                                                        
+   drawGear(screen, clutchMsg.buf[3]);                                                               //clutch status aka gear is sent as 0=neutral, 1=first, 2=secound
+   //drawLightIcon(screen, lightON);                                                                 //variable defined in main
+   drawVoltageValue(screen, (motor1Msg.buf[2]<<8 + motor1Msg.buf[3])/10,                             //voltage uses two positions in motor controller can message
+                            (motor2Msg.buf[2]<<8 + motor2Msg.buf[3])/10);                            //first position needs 8 bitshifts, and that value i batt V *10
+   
+   drawCurrentValue(screen, motor1Msg.buf[1]/10, motor2Msg.buf[2]/10);                               //curent is sent at posison 1 and is motor current A * 10
+   drawPowerConsumption(screen, (motor1Msg.buf[4]<<8 + motor1Msg.buf[5])/10,                         //identical as voltage, just position 5 and 6
+                                (motor2Msg.buf[4]<<8 + motor2Msg.buf[5])/10);                        //first position needs 8 bitshifts, and that value i used energy *10;                                                                   
+   //drawRaceMode(screen, raceModeON);                                                               //variable defined in main
+ 
+ } else if (!right) 
+ {
+   drawLapCount(screen, 2);
+   drawLapTime(screen, 1);                                                                              
+   drawTime(screen, 1000);
+   //drawSector(screen, sWheelMsg.buf[7]);  //sent at last position of steering wheel
+   
+ }
+  //readCan(rxMsg, sWheelMsg);
+  //printCanToSerial(sWheelMsg, true);
+   screen.refresh();
+}
 
 /*------------------------- SETUP -------------------------*/
 void setup() {
   //clockSpeedHigh(debug);
   initSerial();
   initCAN();
-  initCanMessage(txMsg, 3); 
+  //initCanMessage(txMsg, 3); 
 
   initLights(frontlights, backlights);
   raceLights(frontlights, backlights);
   
   initScreen(leftScreen, LEFTSCREEN);
   initScreen(rightScreen, RIGHTSCREEN);
-  
-  delay(1000);
+
   initPins();                                                                               //initPins needs to be last to avoid malfunction, not sure what goes wrong
   
 
@@ -167,17 +193,13 @@ void setup() {
 
 void loop() {
   
-  readCan(rxMsg, sWheelMsg, motor1Msg, motor2Msg);
-  writeCan(txMsg);
+  readCan(rxMsg, sWheelMsg);
   updateScreen(leftScreen, LEFTSCREEN);
   updateScreen(rightScreen, RIGHTSCREEN);
   sWheelCan();
   hazardLightRunning = hazardLights(frontlights, backlights, hazardLightON, raceModeON);
-  //printCanToSerial(motor1Msg, true);
- // printCanToSerial(motor2Msg,true);
-  Serial.println(motor1Msg.buf[6]);
-  //Serial.println(motor2Msg.buf[6]);
-  
+  printCanToSerial(sWheelMsg, true);
+  //printCanToSerial(rxMsg,true);
   delay(100);
 }
 
@@ -218,24 +240,19 @@ void hazard_ISR()                                                               
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();                                                  //storing time of interrupt
 
-  if (interrupt_time - last_interrupt_time > 1000){                           //button debounce, testing if the button has been pushed recently
+  if (interrupt_time - last_interrupt_time > interruptThreshold){                           //button debounce, testing if the button has been pushed recently
     //int state = digitalRead(PIN_HAZARD);
     if (hazardLightON == false) {                                          //
       hazardLightON = true;
-      
       if (debug) {
         Serial.println("Hazard on");                                                     //should be printed nicely for informative debug, this works for now
       }
     } else {
       hazardLightON = false;
-      
       if (debug) {
         Serial.println("Hazard off");                                                     //should be printed nicely for informative debug, this works for now
       }
     }
-    drawHazard(rightScreen, hazardLightON);
-    rightScreen.refresh();
-    
     last_interrupt_time = interrupt_time;                                                   //updating time of last interrupt
   }
 }
@@ -246,22 +263,20 @@ void raceMode_ISR()                                                             
   static unsigned long last_interrupt_time = 0;
   unsigned long interrupt_time = millis();                                                  //storing time of interrupt
 
-  if (interrupt_time - last_interrupt_time > 2000) {                          //button debounce, testing if the button has been pushed recently
+  if (interrupt_time - last_interrupt_time > interruptThreshold) {                          //button debounce, testing if the button has been pushed recently
     //int state = digitalRead(PIN_RACE_MODE);
-    if  (raceModeON == false) { 
-      if (debug) {
-        Serial.println("Race mode on");                                                 //should be printed nicely for informative debug, this works for now
-      }                                           //
+    if  (raceModeON == false) {                                            //
       raceModeON = true;
       raceLights(frontlights, backlights);
-      
-    } else if (raceModeON == true) { 
       if (debug) {
-        Serial.println("Race mode off");                                                 //should be printed nicely for informative debug, this works for now
-      }                      
+        Serial.println("Race mode on");                                                 //should be printed nicely for informative debug, this works for now
+      }
+    } else if (raceModeON == true) {                       
       raceModeON = false;
       showLights(frontlights, backlights);
-      
+      if (debug) {
+        Serial.println("Race mode off");                                                 //should be printed nicely for informative debug, this works for now
+      }
     }
     last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
   }
@@ -274,23 +289,9 @@ void reset_ISR()                                                                
      
   if (interrupt_time - last_interrupt_time > interruptThreshold) {                         //button debounce, testing if the button has been pushed recently
     last_interrupt_time = interrupt_time;                                                  //updating time of last interrupt
-
-    txMsg.buf[1] = 0x01;                                                                   //send reset message over can (for steering wheel)
-    
     if (debug) {
       Serial.println("Reset pressed");                                                     //should be printed nicely for informative debug, this works for now
     }
-
-    //leftScreen.clearScreen();                                                              //clears screens to know that something happened, not ideal with delay
-    //rightScreen.clearScreen();
-    for (int i=0; i<5; i++) {
-      writeCan(txMsg);
-      delay(50);
-      
-      printCanToSerial(txMsg, debug);
-    }                                                                          //delay, steeringwheel might need some time to register the message
-
-    txMsg.buf[1] = 0x00;                                                                   //reset over
   }
 }
 
@@ -350,34 +351,24 @@ void brake_ISR()
 {                                                                                        //Interrupt fuction for brake light
   static unsigned long last_interrupt_time;
   unsigned long interrupt_time = millis();                                               //storing time of last interrupt
-  if(n == 0){
-    n++;
-    delay(200);
-    return;
-  }
 
-  if (interrupt_time - last_interrupt_time > 100) {
+  if (interrupt_time - last_interrupt_time > 200) {
     int state = digitalRead(PIN_BRAKE);
-    if (brakeON == false) {                                                                 //testing if it should turn brake lights off   
+    if (brakeON == false && regenBrakeON == false) {                                                                 //testing if it should turn brake lights off   
         brakeON = true;
         brakeLights(backlights, brakeON);
-        
         txMsg.buf[0] = 0x01;
         
         if (debug) {
-          Serial.println("  BRAKING - PEDAL");                                             //should be printed nicely for informative debug, this works for now
+          Serial.println("  NOT BRAKING - PEDAL");                                             //should be printed nicely for informative debug, this works for now
         }
-    } else if(brakeON == true && regenBrakeON == false) {                                                            //testing if it should turn brake lights on
+    } else if(brakeON == true) {                                                            //testing if it should turn brake lights on
         brakeON = false;
+        brakeLights(backlights, brakeON);
         txMsg.buf[0] = 0x00;
         
-        if (regenBrakeON == false) {
-          brakeLights(backlights, brakeON); 
-          
-        }
-        
         if (debug) {
-          Serial.println(" NOT BRAKING - PEDAL");                                                 //should be printed nicely for informative debug, this works for now
+          Serial.println("  BRAKING - PEDAL");                                                 //should be printed nicely for informative debug, this works for now
         }
     }
     last_interrupt_time = interrupt_time;                                                //updating time of last interrupt
@@ -388,7 +379,6 @@ void brake_ISR()
 
 void sWheelCan()
 {
-    printCanToSerial(sWheelMsg, true);
     brakeVal = sWheelMsg.buf[2];
     if (brakeVal > 0 && regenBrakeON == false) {  // BRAKELIGHTS
       brakeLights(backlights, BRIGHTNESS_BACK_BRAKE);
@@ -396,10 +386,8 @@ void sWheelCan()
       if (debug) {
           Serial.println("  BRAKING - REGEN");                                                 //should be printed nicely for informative debug, this works for now
         }
-    }else if(brakeVal == 0 && regenBrakeON == true){
-      if(brakeON == false){
-        brakeLights(backlights, BRIGHTNESS_BACK);
-      }
+    }else if(brakeVal == 0 && regenBrakeON == true && brakeON == false){
+      brakeLights(backlights, BRIGHTNESS_BACK);
       regenBrakeON = false;
       if (debug) {
           Serial.println("  NOT BRAKING - REGEN");                                             //should be printed nicely for informative debug, this works for now
@@ -416,9 +404,7 @@ void sWheelCan()
    
     }
     if (bitRead(sWheelMsg.buf[1],4)) { //OptimalCurrent
-      drawOptimalCurrent(rightScreen, true);
-    } else {
-      drawOptimalCurrent(rightScreen, false);
+      
     }
     if (bitRead(sWheelMsg.buf[1],5)) { //Lap
       
