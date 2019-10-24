@@ -24,7 +24,7 @@ bool debug = false;
 #define PIN_OPTIMAL_BRAKE   37
 #define PIN_BLANK           38
 
-// BITVALUE BUTTONS
+// BITVALUE BUTTONS //used for masking the byte buttons later whenever the values of the pins are changing 
 #define deadmanSwitch   1
 #define leftBlink       (1<<1)
 #define rightBlink      (1<<2)
